@@ -1,0 +1,59 @@
+inherit_gem:
+  rubocop-discourse: default.yml
+
+AllCops:
+  TargetRubyVersion: 3.0.2
+  Exclude:
+    - vendor/**/*
+    - db/**/*
+    - config/unicorn.rb
+    - config/unicorn_staging.rb
+    - config/puma.rb
+    - tmp/**/*
+    - bin/*
+
+Bundler/OrderedGems:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Max: 6
+
+Metrics/MethodLength:
+  Max: 13
+
+Metrics/PerceivedComplexity:
+  Max: 9
+
+Layout/HashAlignment:
+  Enabled: false
+
+Layout/LineLength:
+  Max: 198
+
+RSpec/Capybara/FeatureMethods:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+# 文字リテラルをfreezeするか？（ruby3ではデフォルトでfreeze）
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/GlobalStdStream:
+  Exclude:
+    - 'config/environments/production.rb'
+
+Style/SpecialGlobalVars:
+  EnforcedStyle: use_perl_names
+
+# 必要ないときは、シングルクォートを使用
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+  Exclude:
+    - 'config/**/*'
+    - 'config.ru'
+    - 'Rakefile'
+
+Style/SymbolArray:
+  Enabled: false
