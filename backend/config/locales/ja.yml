@@ -1,0 +1,43 @@
+ja:
+  errors:
+      messages:
+        extension_whitelist_error: "%{extension}ファイルのアップロードは許可されていません。アップロードできるファイルタイプ：%{allowed_types}"
+  activerecord:
+    errors:
+      messages:
+        blank: を入力してください
+        too_long: "は%{count}文字以内で入力してください"
+        too_short: "は%{count}文字以上で入力してください"
+        taken: は既に使用されています
+        invalid: は正しい形式で設定してください
+        confirmation: "と%{attribute}の入力が一致しません"
+        inclusion: は指定された中から選択してください
+      models:
+        room:
+          attributes:
+           category:
+            blank: を選択してください
+    models:
+      user: ユーザー
+      room: ルーム
+      comment: コメント
+    # model毎に定義したいattributesを記述
+    attributes:
+      user:
+        id: ID
+        name: 名前
+        email: メールアドレス
+        profile_image: プロフィール画像
+        password: パスワード
+        password_confirmation: パスワード（確認用）
+      room:
+        id: ID
+        name: ルーム名
+        category: カテゴリー
+      comment:
+        id: ID
+        sentence: コメント
+  # 全てのmodelで共通して使用するattributesを定義
+  attributes:
+    created_at: 作成日
+    updated_at: 更新日

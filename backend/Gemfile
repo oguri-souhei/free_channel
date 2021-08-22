@@ -9,6 +9,7 @@ gem 'puma', '~> 4.1'
 gem 'bootsnap', '>= 1.4.2', require: false
 gem 'devise'
 # gem 'rack-cors'
+gem 'rails-i18n'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -30,6 +31,7 @@ end
 
 group :test do
   gem 'rspec-rails'
+  gem 'shoulda-matchers'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem

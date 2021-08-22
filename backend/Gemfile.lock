@@ -129,6 +129,9 @@ GEM
       nokogiri (>= 1.6)
     rails-html-sanitizer (1.4.1)
       loofah (~> 2.3)
+    rails-i18n (6.0.0)
+      i18n (>= 0.7, < 2)
+      railties (>= 6.0.0, < 7)
     railties (6.0.4.1)
       actionpack (= 6.0.4.1)
       activesupport (= 6.0.4.1)
@@ -187,6 +190,8 @@ GEM
       rubocop (~> 1.0)
       rubocop-ast (>= 1.1.0)
     ruby-progressbar (1.11.0)
+    shoulda-matchers (5.0.0)
+      activesupport (>= 5.2.0)
     spring (2.1.1)
     spring-commands-rspec (1.0.4)
       spring (>= 0.9.1)
@@ -224,12 +229,14 @@ DEPENDENCIES
   mysql2 (>= 0.4.4)
   puma (~> 4.1)
   rails (~> 6.0.4, >= 6.0.4.1)
+  rails-i18n
   rspec-rails
   rubocop
   rubocop-discourse
   rubocop-performance
   rubocop-rails
   rubocop-rspec
+  shoulda-matchers
   spring
   spring-commands-rspec
   spring-watcher-listen (~> 2.0.0)
