@@ -25,6 +25,8 @@ services:
       - ./frontend:/app
     ports:
       - '8080:8080'
+    env:
+      API_URL: http://localhost:3000
     tty: true
     stdin_open: true
     command: npm run serve
