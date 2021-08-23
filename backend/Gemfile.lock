@@ -82,8 +82,6 @@ GEM
       activesupport (>= 5.0)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
-    jbuilder (2.11.2)
-      activesupport (>= 5.0.0)
     listen (3.7.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -109,6 +107,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
+    rack-cors (1.1.1)
+      rack (>= 2.0.0)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rails (6.0.4.1)
@@ -227,10 +227,10 @@ DEPENDENCIES
   byebug
   devise
   factory_bot_rails
-  jbuilder
   listen (~> 3.2)
   mysql2 (>= 0.4.4)
   puma (~> 4.1)
+  rack-cors
   rails (~> 6.0.4, >= 6.0.4.1)
   rails-i18n
   rspec-rails
