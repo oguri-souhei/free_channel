@@ -10,6 +10,7 @@ export default {
 
     axios.defaults.withCredentials = true
 
+    // this.$httpでaxiosを使用できる
     Vue.prototype.$http = axios
   }
 }
