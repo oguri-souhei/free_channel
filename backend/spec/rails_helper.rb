@@ -64,6 +64,9 @@ RSpec.configure do |config|
 
   # FactoryBotの省略記法を許可
   config.include FactoryBot::Syntax::Methods
+
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  config.include Devise::Test::IntegrationHelpers, type: :system
 end
 
 Shoulda::Matchers.configure do |config|

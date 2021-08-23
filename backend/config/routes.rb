@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       namespace :auth do
         post '/login', to: 'sessions#create', as: :login
+        delete 'logout', to: 'sessions#destroy', as: :logout
       end
     end
   end
