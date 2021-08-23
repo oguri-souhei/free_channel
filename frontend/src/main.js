@@ -4,11 +4,11 @@ import router from './router'
 import store from './store'
 import axios from 'axios'
 import './plugins/element'
+import axiosUtil from './plugins/axios'
 
 Vue.config.productionTip = false
 
-Vue.prototype.$http = axios
-axios.defaults.baseURL = process.env.API_URL
+Vue.use(axiosUtil, { axios })
 
 new Vue({
   router,
