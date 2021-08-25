@@ -104,6 +104,28 @@ RSpec.describe 'Api::V1::Auth::Sessions', type: :request do
         expect(controller.current_user).to be_nil
       end
     end
+
+    context 'when user is logged in' do
+      before do
+        sign_in tom
+        post api_v1_auth_login_path, params: {
+          user: { email: tom.email, password: tom.password }
+        }
+      end
+
+      it 'responds :forbidden' do
+        expect(response).to have_http_status :forbidden
+      end
+
+      it 'render json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'render message' do
+        msg = JSON.parse(response.body)['message']
+        expect(msg).to eq 'User has already been logged in.'
+      end
+    end
   end
 
   describe 'DELETE /api/v1/auth/logout' do
