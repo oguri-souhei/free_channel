@@ -19,12 +19,12 @@ export default {
   },
   watch: {
     // flashが更新されたら表示、3000ミリ秒後に非表示に
-    // flash() {
-    //   this.flag = true
-    //   setTimeout(() => {
-    //     this.flag = false
-    //   }, 3000)
-    // }
+    flash() {
+      this.flag = true
+      setTimeout(() => {
+        this.flag = false
+      }, 3000)
+    }
   },
   // 初回アクセス時にflashが表示されない
   created() {

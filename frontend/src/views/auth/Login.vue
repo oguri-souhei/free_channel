@@ -60,6 +60,12 @@ export default {
         this.errors.push(result.data.errors.message)
       }
 
+      // 既にログインしている場合
+      else if (result.status === 403) {
+        this.$store.dispatch('setFlash', { msg: '既にログインしています', type: 'warning' })
+        this.$router.push('/')
+      }
+
       // ログインに成功した場合
       else if (result.status === 200) {
         const user = result.data.data
