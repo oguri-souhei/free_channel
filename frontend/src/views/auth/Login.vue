@@ -48,27 +48,11 @@ export default {
     async login() {
       this.errors = []
 
-      const result = await this.$http.post('/api/v1/auth/login', { user: this.user }).catch(err => err.response || err)
-
-      // アカウントが見つからなかった場合
-      if (result.status === 404) {
-        this.errors.push(result.data.errors.message)
-      }
-
-      // パスワードが違う場合
-      else if (result.status === 401) {
-        this.errors.push(result.data.errors.message)
-      }
-
-      // 既にログインしている場合
-      else if (result.status === 403) {
-        this.$store.dispatch('setFlash', { msg: '既にログインしています', type: 'warning' })
-        this.$router.push('/')
-      }
+      const response = await this.$http.post('/api/v1/auth/login', { user: this.user }).catch(err => err.response || err)
 
       // ログインに成功した場合
-      else if (result.status === 200) {
-        const user = result.data.data
+      if (response.status === 200) {
+        const user = response.data.data
 
         this.$store.dispatch('setFlash', { msg: 'ログインしました', type: 'success' })
         this.$store.dispatch('setCurrentUser', user)
@@ -79,6 +63,22 @@ export default {
         } else {
           this.$router.push({ path: '/' })
         }
+      }
+
+        // パスワードが違う場合
+      else if (response.status === 401) {
+        this.errors.push(response.data.errors.message)
+      }
+
+      // 既にログインしている場合
+      else if (response.status === 403) {
+        this.$store.dispatch('setFlash', { msg: '既にログインしています', type: 'warning' })
+        this.$router.push('/')
+      }
+
+      // アカウントが見つからなかった場合
+      else if (response.status === 404) {
+        this.errors.push(response.data.errors.message)
       }
 
       // その他のエラー

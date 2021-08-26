@@ -10,13 +10,7 @@ export default new Vuex.Store({
       msg: '', // flashのメッセージ
       type: '' // flashのタイプ（success, warning, error)
     },
-    currentUser: {
-      id: '',
-      name: '',
-      email: '',
-      created_at: '',
-      updated_at: ''
-    }
+    currentUser: null
   },
   getters: {
     isLoggedIn(state) {
