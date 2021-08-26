@@ -1,5 +1,6 @@
 class Api::V1::Auth::RegistrationsController < Api::V1::ApplicationController
   before_action :require_authentication, only: :destroy
+  before_action :require_no_authentication, only: :create
 
   # POST /api/v1/auth/sign_up
   def create

@@ -50,6 +50,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       end
     end
 
+    # 名前がない
     context 'when name is blank' do
       let(:name_blank_params) { attributes_for(:tom, name: '   ') }
 
@@ -255,6 +256,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       end
     end
 
+    # パスワードが空
     context 'when password is blank' do
       let(:password_blank_params) { attributes_for(:tom, password: '   ') }
 
@@ -319,6 +321,35 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       it 'does not create sessions' do
         post api_v1_auth_sign_up_path, params: { user: wrong_password_confirmation_params }
         expect(controller.user_signed_in?).to be_falsey
+      end
+    end
+
+    # ユーザーが既にログインしている
+    context 'when user is logged in' do
+      before do
+        sign_in tom
+      end
+
+      it 'responds :forbidden' do
+        post api_v1_auth_sign_up_path, params: { user: user_params }
+        expect(response).to have_http_status :forbidden
+      end
+
+      it 'renders json' do
+        post api_v1_auth_sign_up_path, params: { user: user_params }
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders message' do
+        post api_v1_auth_sign_up_path, params: { user: user_params }
+        msg = JSON.parse(response.body)['message']
+        expect(msg).to eq 'User has already been logged in.'
+      end
+
+      it 'does not create record' do
+        expect {
+          post api_v1_auth_sign_up_path, params: { user: user_params }
+        }.to_not change(User, :count)
       end
     end
   end
