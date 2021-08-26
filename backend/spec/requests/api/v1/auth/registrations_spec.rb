@@ -1,6 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
+  let(:tom) { create(:tom) }
   let(:user_params) { attributes_for(:tom) }
 
   describe 'POST /api/v1/auth/sign_up' do
@@ -318,6 +319,72 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       it 'does not create sessions' do
         post api_v1_auth_sign_up_path, params: { user: wrong_password_confirmation_params }
         expect(controller.user_signed_in?).to be_falsey
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/auth' do
+    # 正常系
+    context 'when success' do
+      before do
+        sign_in tom
+      end
+
+      it 'responds :ok' do
+        delete api_v1_auth_path
+        expect(response).to have_http_status :ok
+      end
+
+      it 'renders json' do
+        delete api_v1_auth_path
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders message' do
+        delete api_v1_auth_path
+        msg = JSON.parse(response.body)['message']
+        expect(msg).to eq 'アカウントを削除しました'
+      end
+
+      it 'destroys a record' do
+        expect {
+          delete api_v1_auth_path
+        }.to change(User, :count).by(-1)
+      end
+
+      it 'destroys sessions' do
+        delete api_v1_auth_path
+        expect(controller.user_signed_in?).to be_falsey
+      end
+
+      it 'does not define current_user' do
+        delete api_v1_auth_path
+        expect(controller.current_user).to be_nil
+      end
+    end
+
+    # ユーザーがログインしていない
+    context 'when user is not logged in' do
+      it 'responds :unauthorized' do
+        delete api_v1_auth_path
+        expect(response).to have_http_status :unauthorized
+      end
+
+      it 'renders json' do
+        delete api_v1_auth_path
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders message' do
+        delete api_v1_auth_path
+        msg = JSON.parse(response.body)['message']
+        expect(msg).to eq 'ログインしてください'
+      end
+
+      it 'does not destroy record' do
+        expect {
+          delete api_v1_auth_path
+        }.to_not change(User, :count)
       end
     end
   end
