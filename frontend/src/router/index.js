@@ -14,6 +14,12 @@ const routes = [
     name: 'About',
     component: () => import('../views/About.vue')
   },
+  // アカウント登録ページ
+  {
+    path: '/sign_up',
+    name: 'SignUp',
+    component: () => import('../views/auth/SignUp.vue')
+  },
   // ログインページ
   {
     path: '/login',

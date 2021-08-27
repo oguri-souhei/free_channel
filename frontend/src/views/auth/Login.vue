@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { rules } from '@/modules/users'
+
 export default {
   data() {
     return {
@@ -29,17 +31,7 @@ export default {
         email: '',
         password: ''
       },
-      rules: {
-        email: [
-          { required: true, message: 'メールアドレスを入力してください', trigger: 'blur' },
-          { type: 'email', required: true, message: 'メールアドレスを正しい形式で設定してください', trigger: 'blur'},
-          { max: 250, message: 'メールアドレスは250文字以内で設定してください', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: 'パスワードを入力してください', trigger: 'blur' },
-          { min: 6, message: 'パスワードは6文字以上で設定してください', trigger: 'blur' }
-        ],
-      },
+      rules: rules,
       errors: []
     }
   },

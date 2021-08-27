@@ -27,7 +27,7 @@
           <el-input placeholder="ルームを検索"></el-input>
         </el-menu-item>
         <el-menu-item index="3">
-          <router-link to="#">
+          <router-link to="/sign_up">
             <el-button type="primary" round>アカウント登録</el-button>
           </router-link>
         </el-menu-item>
@@ -67,7 +67,7 @@ export default {
       }
 
       // 現在のページがトップページだと、duplicationエラーが起きる。。。
-      this.$router.push('/')
+      this.$router.push('/').catch(() => null)
     }
   }
 }
