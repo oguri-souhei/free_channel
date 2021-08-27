@@ -39,4 +39,10 @@ export default {
 </script>
 
 <style scoped>
+.flash {
+  min-width: 300px;
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+}
 </style>
