@@ -1,6 +1,6 @@
 <template>
-  <div id="flash">
-    <el-alert v-show="flag" :title="flash.msg" :type="flash.type" effect="dark" :closable="false"></el-alert>
+  <div class="flash">
+    <v-alert v-show="flag" :type="flash.type">{{ flash.msg }}</v-alert>
   </div>
 </template>
 

@@ -8,7 +8,7 @@ export default new Vuex.Store({
   state: {
     flash: {
       msg: '', // flashのメッセージ
-      type: '' // flashのタイプ（success, warning, error)
+      type: 'success' // flashのタイプ（success, warning, error)
     },
     currentUser: null
   },

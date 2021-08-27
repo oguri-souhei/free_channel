@@ -1,13 +1,16 @@
 <template>
   <div id="app">
-    <Header></Header>
-    <Flash></Flash>
-    <router-view/>
+    <v-app>
+      <Header></Header>
+      <Flash></Flash>
+      <div class="content">
+        <router-view/>
+      </div>
+    </v-app>
   </div>
 </template>
 
 <script>
-import 'normalize.css' // reset.css
 import Header from './components/layouts/Header.vue'
 import Flash from './components/layouts/Flash.vue'
 
@@ -19,3 +22,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.content {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+</style>

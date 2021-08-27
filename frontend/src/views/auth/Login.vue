@@ -1,46 +1,40 @@
 <template>
-  <div id="login">
+  <div class="login">
     <h2>ログイン</h2>
-    <el-form label-position="top" label-width="100px" :model="user" :rules="rules">
+    <v-form ref="form" lazy-validation>
       <!-- errors -->
-      <div id="errors" v-if="errors.length !== 0">
-        <ul v-for="e in errors" :key="e">
-          <li>
-            <el-alert :title="e" type="error" center show-icon></el-alert>
-          </li>
+      <div class="errors" v-if="errors.length !== 0">
+        <ul>
+          <li v-for="e in errors" :key="e"><v-alert type="error" dense text>{{ e }}</v-alert></li>
         </ul>
       </div>
-      <el-form-item label="メールアドレス" prop="email">
-        <el-input id="email" v-model="user.email"></el-input>
-      </el-form-item>
-      <el-form-item label="パスワード" prop="password">
-        <el-input id="password" v-model="user.password" show-password></el-input>
-      </el-form-item>
-      <el-button type="primary" id="submit" @click="login">ログイン</el-button>
-    </el-form>
+
+      <v-text-field v-model="user.email" :counter="250" label="メールアドレス" required></v-text-field>
+
+      <v-text-field v-model="user.password" label="パスワード" required></v-text-field>
+
+      <v-btn color="primary" @click="login">ログイン</v-btn>
+    </v-form>
   </div>
 </template>
 
 <script>
-import { rules } from '@/modules/users'
-
 export default {
+  name: 'Login',
   data() {
     return {
       user: {
         email: '',
         password: ''
       },
-      rules: rules,
-      errors: []
+      errors: [],
     }
   },
   methods: {
-    // ログインする
     async login() {
       this.errors = []
 
-      const response = await this.$http.post('/api/v1/auth/login', { user: this.user }).catch(err => err.response || err)
+      const response = await this.$http.post('/api/v1/auth/login', { user: this.user }).catch(err => err.response)
 
       // ログインに成功した場合
       if (response.status === 200) {
@@ -87,18 +81,11 @@ h2 {
   text-align: center;
 }
 
-li {
-  list-style: none;
-}
-
-#sign_up {
-  padding-top: 30px;
-}
-
-.el-form {
-  width: 450px;
-  margin-left: auto;
-  margin-right: auto;
+.login {
+  max-width: 500px;
   text-align: center;
+  margin: 0 auto;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 </style>

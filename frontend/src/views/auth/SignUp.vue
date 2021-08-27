@@ -1,29 +1,25 @@
 <template>
-  <div id="sign_up">
+  <div class="sign_up">
     <h2>アカウント登録</h2>
-    <el-form label-position="top" label-width="100px" :model="user" :rules="rules">
+
+    <v-form ref="form" lazy-validation>
       <!-- errors -->
-      <div id="errors" v-if="errors.length !== 0">
-        <ul v-for="e in errors" :key="e">
-          <li>
-            <el-alert :title="e" type="error" center show-icon></el-alert>
-          </li>
+      <div class="errors" v-if="errors.length !== 0">
+        <ul>
+          <li v-for="e in errors" :key="e"><v-alert type="error" dense text>{{ e }}</v-alert></li>
         </ul>
       </div>
-      <el-form-item label="名前" prop="name">
-        <el-input id="name" v-model="user.name"></el-input>
-      </el-form-item>
-      <el-form-item label="メールアドレス" prop="email">
-        <el-input id="email" v-model="user.email"></el-input>
-      </el-form-item>
-      <el-form-item label="パスワード" prop="password">
-        <el-input id="password" v-model="user.password" show-password></el-input>
-      </el-form-item>
-      <el-form-item label="パスワード（確認用）" prop="password_confirmation">
-        <el-input id="password_confirmation" v-model="user.password_confirmation" show-password></el-input>
-      </el-form-item>
-      <el-button type="primary" id="submit" @click="createUser">登録</el-button>
-    </el-form>
+
+      <v-text-field v-model="user.name" :counter="50" label="名前" required></v-text-field>
+
+      <v-text-field v-model="user.email" :counter="250" label="メールアドレス" required></v-text-field>
+
+      <v-text-field v-model="user.password" label="パスワード" required></v-text-field>
+
+      <v-text-field v-model="user.password_confirmation" label="パスワード（確認用）" required></v-text-field>
+
+      <v-btn color="primary" @click="signUp">登録</v-btn>
+    </v-form>
   </div>
 </template>
 
@@ -45,7 +41,7 @@ export default {
     }
   },
   methods: {
-    async createUser() {
+    async signUp() {
       this.errors = [] // エラーメッセージを空に
 
       const response = await this.$http.post('/api/v1/auth/sign_up', { user: this.user }).catch(err => err.response)
@@ -90,14 +86,15 @@ li {
   list-style: none;
 }
 
-#sign_up {
-  padding-top: 30px;
+.sign_up {
+  max-width: 500px;
+  text-align: center;
+  margin: 0 auto;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.el-form {
-  width: 450px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center;
+form {
+  padding-top: 30px;
 }
 </style>
