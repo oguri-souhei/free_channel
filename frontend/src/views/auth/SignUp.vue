@@ -1,33 +1,73 @@
 <template>
   <div class="sign_up">
+
     <h2>アカウント登録</h2>
 
-    <v-form ref="form" lazy-validation>
-      <!-- errors -->
-      <div class="errors" v-if="errors.length !== 0">
-        <ul>
-          <li v-for="e in errors" :key="e"><v-alert type="error" dense text>{{ e }}</v-alert></li>
-        </ul>
-      </div>
+    <ValidationObserver ref="observer" v-slot="{ invalid }">
+      <v-form ref="form" lazy-validation>
 
-      <v-text-field v-model="user.name" :counter="50" label="名前" required></v-text-field>
+        <!-- errors -->
+        <div class="errors" v-if="errors.length !== 0">
+          <ul>
+            <li v-for="e in errors" :key="e"><v-alert type="error" dense text>{{ e }}</v-alert></li>
+          </ul>
+        </div>
 
-      <v-text-field v-model="user.email" :counter="250" label="メールアドレス" required></v-text-field>
+        <ValidationProvider v-slot="{ errors }" name="名前" rules="required|max:50">
+          <v-text-field v-model="user.name" :counter="50" label="名前" :error-messages="errors" required></v-text-field>
+        </ValidationProvider>
 
-      <v-text-field v-model="user.password" label="パスワード" required></v-text-field>
+        <ValidationProvider v-slot="{ errors }" name="メールアドレス" rules="required|max:250|email">
+          <v-text-field v-model="user.email" :counter="250" label="メールアドレス" :error-messages="errors" required></v-text-field>
+        </ValidationProvider>
 
-      <v-text-field v-model="user.password_confirmation" label="パスワード（確認用）" required></v-text-field>
+        <ValidationProvider v-slot="{ errors }" name="パスワード" rules="required|min:6">
+          <v-text-field v-model="user.password" label="パスワード" :error-messages="errors" required></v-text-field>
+        </ValidationProvider>
 
-      <v-btn color="primary" @click="signUp">登録</v-btn>
-    </v-form>
-  </div>
+        <ValidationProvider v-slot="{ errors }" name="パスワード（確認用）" rules="required">
+          <v-text-field v-model="user.password_confirmation" label="パスワード（確認用）" :error-messages="errors" required></v-text-field>
+        </ValidationProvider>
+
+        <v-btn color="primary" @click="signUp" :disabled="invalid">登録</v-btn>
+      </v-form>
+    
+    </ValidationObserver>
+    </div>
 </template>
 
 <script>
-import { rules } from '@/modules/users'
+import { required, min, email, max } from 'vee-validate/dist/rules'
+import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
+
+setInteractionMode('eager')
+
+extend('min', {
+  ...min,
+  message: '{_field_}は{length}文字以上で入力してください',
+})
+
+extend('required', {
+  ...required,
+  message: '{_field_}を入力してください',
+})
+
+extend('max', {
+  ...max,
+  message: '{_field_}は{length}文字以内で入力してください',
+})
+
+extend('email', {
+  ...email,
+  message: '{_field_}は正しい形式で入力してください',
+})
 
 export default {
   name: 'SignUp',
+  components: {
+    ValidationObserver,
+    ValidationProvider,
+  },
   data() {
     return {
       user: {
@@ -36,8 +76,7 @@ export default {
         password: '',
         password_confirmation: ''
       },
-      errors: [],
-      rules: rules
+      errors: []
     }
   },
   methods: {
