@@ -12,4 +12,8 @@ class Api::V1::ApplicationController < ApplicationController
       render json: { message: 'ログインしてください' }, status: :unauthorized
     end
   end
+
+  def render_status_404
+    render json: { message: '404 not found' }, status: :not_found
+  end
 end

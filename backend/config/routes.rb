@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
+      resources :users, only: :show
       get '/login_user', to: 'users#login_user', as: :login_user
 
       namespace :auth do
