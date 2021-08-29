@@ -1,5 +1,5 @@
 class Api::V1::Auth::RegistrationsController < Api::V1::ApplicationController
-  before_action :require_authentication, only: :destroy
+  before_action :require_authentication, only: [:update, :destroy]
   before_action :require_no_authentication, only: :create
 
   # POST /api/v1/auth/sign_up
@@ -11,6 +11,15 @@ class Api::V1::Auth::RegistrationsController < Api::V1::ApplicationController
       render json: { data: user }, status: :ok
     else
       render json: { errors: user.errors.full_messages }, status: :bad_request
+    end
+  end
+
+  # PATCH /api/v1/auth/registrations
+  def update
+    if current_user.update_without_password(user_params)
+      render json: { data: current_user }, status: :ok
+    else
+      render json: { errors: current_user.errors.full_messages }, status: :bad_request
     end
   end
 

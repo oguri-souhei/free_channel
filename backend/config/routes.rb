@@ -12,7 +12,8 @@ Rails.application.routes.draw do
         delete '/logout', to: 'sessions#destroy', as: :logout
 
         scope :registrations do
-          delete '/', to: 'registrations#destroy', as: :registrations
+          patch '/', to: 'registrations#update', as: :registrations
+          delete '/', to: 'registrations#destroy'
         end
       end
     end

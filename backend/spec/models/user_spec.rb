@@ -80,7 +80,7 @@ RSpec.describe User, type: :model do
             expect(user_params[:password]).to_not be_valid_password_of(tom)
           end
         end
-  
+
         # パスワードありでも更新できる
         it 'updates user with password' do
           tom.update_without_password(user_params_with_password)

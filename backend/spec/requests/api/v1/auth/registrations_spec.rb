@@ -354,7 +354,306 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
     end
   end
 
-  describe 'DELETE /api/v1/auth' do
+  describe 'PATCH /api/v1/auth/registrations' do
+    let(:update_user_params) { attributes_for(:user) }
+
+    # 正常系
+    context 'when success' do
+      before do
+        sign_in tom
+        patch api_v1_auth_registrations_path, params: { user: update_user_params }
+      end
+
+      it 'responds :ok' do
+        expect(response).to have_http_status :ok
+      end
+
+      it 'render json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'render user data' do
+        data = JSON.parse(response.body)['data']
+        aggregate_failures do
+          expect(data['id']).to eq tom.id
+          expect(data['name']).to eq update_user_params[:name]
+          expect(data['email']).to eq update_user_params[:email]
+          expect(data['password']).to be_blank
+          expect(data['password_confirmation']).to be_blank
+          expect(data['encrypted_password']).to be_blank
+        end
+      end
+    end
+
+    # パスワードがからでも更新できる
+    context 'when password is blank' do
+      let(:user_params) { attributes_for(:user, password: '', password_confirmation: '') }
+
+      before do
+        sign_in tom
+        patch api_v1_auth_registrations_path, params: { user: user_params }
+      end
+
+      it 'responds :ok' do
+        expect(response).to have_http_status :ok
+      end
+
+      it 'render json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'render user data' do
+        data = JSON.parse(response.body)['data']
+        aggregate_failures do
+          expect(data['id']).to eq tom.id
+          expect(data['name']).to eq user_params[:name]
+          expect(data['email']).to eq user_params[:email]
+          expect(data['password']).to be_blank
+          expect(data['password_confirmation']).to be_blank
+          expect(data['encrypted_password']).to be_blank
+        end
+      end
+    end
+
+    # ログインしてない
+    context 'when user is not logged in' do
+      before do
+        patch api_v1_auth_registrations_path, params: { user: update_user_params }
+      end
+
+      it 'responds :unauthorized' do
+        expect(response).to have_http_status :unauthorized
+      end
+
+      it 'render json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'render message' do
+        msg = JSON.parse(response.body)['message']
+        expect(msg).to eq 'ログインしてください'
+      end
+    end
+
+    # 名前が空
+    context 'when name is blank' do
+      let(:wrong_params) { attributes_for(:user, name: '  ') }
+
+      before do
+        sign_in tom
+        patch api_v1_auth_registrations_path, params: { user: wrong_params }
+      end
+
+      it 'responds :bad_request' do
+        expect(response).to have_http_status :bad_request
+      end
+
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders errors messages' do
+        err = JSON.parse(response.body)['errors']
+        expect(err[0]).to eq '名前を入力してください'
+      end
+
+      it 'does not update record' do
+        tom.reload
+        aggregate_failures do
+          expect(tom.name).to_not eq wrong_params[:name]
+          expect(tom.email).to_not eq wrong_params[:email]
+        end
+      end
+    end
+
+    # 名前が長すぎる
+    context 'when name is too long' do
+      let(:wrong_params) { attributes_for(:user, name: 'a' * 51) }
+
+      before do
+        sign_in tom
+        patch api_v1_auth_registrations_path, params: { user: wrong_params }
+      end
+
+      it 'responds :bad_request' do
+        expect(response).to have_http_status :bad_request
+      end
+
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders errors messages' do
+        err = JSON.parse(response.body)['errors']
+        expect(err[0]).to eq '名前は50文字以内で入力してください'
+      end
+
+      it 'does not update record' do
+        tom.reload
+        aggregate_failures do
+          expect(tom.name).to_not eq wrong_params[:name]
+          expect(tom.email).to_not eq wrong_params[:email]
+        end
+      end
+    end
+
+    # メールアドレスが空
+    context 'when email is blank' do
+      let(:wrong_params) { attributes_for(:user, email: '  ') }
+
+      before do
+        sign_in tom
+        patch api_v1_auth_registrations_path, params: { user: wrong_params }
+      end
+
+      it 'responds :bad_request' do
+        expect(response).to have_http_status :bad_request
+      end
+
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders errors messages' do
+        err = JSON.parse(response.body)['errors']
+        expect(err[0]).to eq 'メールアドレスを入力してください'
+      end
+
+      it 'does not update record' do
+        tom.reload
+        aggregate_failures do
+          expect(tom.name).to_not eq wrong_params[:name]
+          expect(tom.email).to_not eq wrong_params[:email]
+        end
+      end
+    end
+
+    # メールアドレスが長い
+    context 'when email is too long' do
+      let(:wrong_params) { attributes_for(:user, email: 'a' * 240 + '@example.com') }
+
+      before do
+        sign_in tom
+        patch api_v1_auth_registrations_path, params: { user: wrong_params }
+      end
+
+      it 'responds :bad_request' do
+        expect(response).to have_http_status :bad_request
+      end
+
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders errors messages' do
+        err = JSON.parse(response.body)['errors']
+        expect(err[0]).to eq 'メールアドレスは250文字以内で入力してください'
+      end
+
+      it 'does not update record' do
+        tom.reload
+        aggregate_failures do
+          expect(tom.name).to_not eq wrong_params[:name]
+          expect(tom.email).to_not eq wrong_params[:email]
+        end
+      end
+    end
+
+    # メールアドレスの形式が正しくない
+    context 'when email is wrong format' do
+      let(:wrong_params) { attributes_for(:user, email: 'wrong@format,com') }
+
+      before do
+        sign_in tom
+        patch api_v1_auth_registrations_path, params: { user: wrong_params }
+      end
+
+      it 'responds :bad_request' do
+        expect(response).to have_http_status :bad_request
+      end
+
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders errors messages' do
+        err = JSON.parse(response.body)['errors']
+        expect(err[0]).to eq 'メールアドレスは正しい形式で設定してください'
+      end
+
+      it 'does not update record' do
+        tom.reload
+        aggregate_failures do
+          expect(tom.name).to_not eq wrong_params[:name]
+          expect(tom.email).to_not eq wrong_params[:email]
+        end
+      end
+    end
+
+    # パスワードが短い
+    context 'when password is too short' do
+      let(:wrong_params) { attributes_for(:user, password: 'foo', password_confirmation: 'foo') }
+
+      before do
+        sign_in tom
+        patch api_v1_auth_registrations_path, params: { user: wrong_params }
+      end
+
+      it 'responds :bad_request' do
+        expect(response).to have_http_status :bad_request
+      end
+
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders errors messages' do
+        err = JSON.parse(response.body)['errors']
+        expect(err[0]).to eq 'パスワードは6文字以上で入力してください'
+      end
+
+      it 'does not update record' do
+        tom.reload
+        aggregate_failures do
+          expect(tom.name).to_not eq wrong_params[:name]
+          expect(tom.email).to_not eq wrong_params[:email]
+        end
+      end
+    end
+
+    # パスワード（確認用）がパスワードと一致しない
+    context 'when password_confirmation is wrong' do
+      let(:wrong_params) { attributes_for(:user, password_confirmation: 'foobar') }
+
+      before do
+        sign_in tom
+        patch api_v1_auth_registrations_path, params: { user: wrong_params }
+      end
+
+      it 'responds :bad_request' do
+        expect(response).to have_http_status :bad_request
+      end
+
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders errors messages' do
+        err = JSON.parse(response.body)['errors']
+        expect(err[0]).to eq 'パスワード（確認用）とパスワードの入力が一致しません'
+      end
+
+      it 'does not update record' do
+        tom.reload
+        aggregate_failures do
+          expect(tom.name).to_not eq wrong_params[:name]
+          expect(tom.email).to_not eq wrong_params[:email]
+        end
+      end
+    end
+  end
+
+  describe 'DELETE /api/v1/auth/registrations' do
     # 正常系
     context 'when success' do
       before do
