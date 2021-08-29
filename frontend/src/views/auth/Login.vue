@@ -13,11 +13,24 @@
         </div>
 
         <ValidationProvider v-slot="{ errors }" name="メールアドレス" rules="required|email|max:250">
-          <v-text-field v-model="user.email" :counter="250" label="メールアドレス" :error-messages="errors" required></v-text-field>
+          <v-text-field
+            v-model="user.email"
+            id="email"
+            :counter="250"
+            label="メールアドレス"
+            :error-messages="errors"
+            required
+          ></v-text-field>
         </ValidationProvider>
 
         <ValidationProvider v-slot="{ errors }" name="パスワード" rules="required|min:6">
-          <v-text-field v-model="user.password" label="パスワード" :error-messages="errors" required></v-text-field>
+          <v-text-field
+            v-model="user.password"
+            id="password"
+            label="パスワード"
+            :error-messages="errors"
+            required
+        ></v-text-field>
         </ValidationProvider>
 
         <v-btn color="primary" @click="login" :disabled="invalid">ログイン</v-btn>
