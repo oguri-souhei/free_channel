@@ -10,7 +10,10 @@ Rails.application.routes.draw do
         post '/sign_up', to: 'registrations#create', as: :sign_up
         post '/login', to: 'sessions#create', as: :login
         delete '/logout', to: 'sessions#destroy', as: :logout
-        delete '/', to: 'registrations#destroy'
+
+        scope :registrations do
+          delete '/', to: 'registrations#destroy', as: :registrations
+        end
       end
     end
   end

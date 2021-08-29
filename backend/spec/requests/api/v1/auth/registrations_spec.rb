@@ -362,34 +362,34 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       end
 
       it 'responds :ok' do
-        delete api_v1_auth_path
+        delete api_v1_auth_registrations_path
         expect(response).to have_http_status :ok
       end
 
       it 'renders json' do
-        delete api_v1_auth_path
+        delete api_v1_auth_registrations_path
         expect(response).to have_content_type :json
       end
 
       it 'renders message' do
-        delete api_v1_auth_path
+        delete api_v1_auth_registrations_path
         msg = JSON.parse(response.body)['message']
         expect(msg).to eq 'アカウントを削除しました'
       end
 
       it 'destroys a record' do
         expect {
-          delete api_v1_auth_path
+          delete api_v1_auth_registrations_path
         }.to change(User, :count).by(-1)
       end
 
       it 'destroys sessions' do
-        delete api_v1_auth_path
+        delete api_v1_auth_registrations_path
         expect(controller.user_signed_in?).to be_falsey
       end
 
       it 'does not define current_user' do
-        delete api_v1_auth_path
+        delete api_v1_auth_registrations_path
         expect(controller.current_user).to be_nil
       end
     end
@@ -397,24 +397,24 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
     # ユーザーがログインしていない
     context 'when user is not logged in' do
       it 'responds :unauthorized' do
-        delete api_v1_auth_path
+        delete api_v1_auth_registrations_path
         expect(response).to have_http_status :unauthorized
       end
 
       it 'renders json' do
-        delete api_v1_auth_path
+        delete api_v1_auth_registrations_path
         expect(response).to have_content_type :json
       end
 
       it 'renders message' do
-        delete api_v1_auth_path
+        delete api_v1_auth_registrations_path
         msg = JSON.parse(response.body)['message']
         expect(msg).to eq 'ログインしてください'
       end
 
       it 'does not destroy record' do
         expect {
-          delete api_v1_auth_path
+          delete api_v1_auth_registrations_path
         }.to_not change(User, :count)
       end
     end

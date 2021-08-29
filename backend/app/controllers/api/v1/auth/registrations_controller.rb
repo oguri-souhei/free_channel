@@ -14,7 +14,7 @@ class Api::V1::Auth::RegistrationsController < Api::V1::ApplicationController
     end
   end
 
-  # DELETE /api/v1/auth/
+  # DELETE /api/v1/auth/registrations
   def destroy
     if current_user.destroy
       sign_out current_user
