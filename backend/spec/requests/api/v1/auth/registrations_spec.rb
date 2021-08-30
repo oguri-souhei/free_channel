@@ -390,7 +390,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
   end
 
   describe 'PATCH /api/v1/auth/registrations' do
-    let(:update_user_params) { attributes_for(:user) }
+    let(:update_user_params) {
+      attributes_for(:user).merge(current_password: tom.password)
+    }
 
     # 正常系
     context 'when success' do
@@ -422,7 +424,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
     # パスワードがからでも更新できる
     context 'when password is blank' do
-      let(:user_params) { attributes_for(:user, password: '', password_confirmation: '') }
+      let(:user_params) {
+        attributes_for(:user ,password: '', password_confirmation: '').merge(current_password: tom.password)
+      }
 
       before do
         login_as tom
@@ -450,6 +454,52 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       end
     end
 
+    # 現在のパスワードが入力されていない
+    context 'when current_password is blank' do
+      let(:invalid_params) { attributes_for(:user) }
+
+      before do
+        login_as tom
+        patch api_v1_auth_registrations_path, params: { user: invalid_params }
+      end
+
+      it 'responds :bad_request' do
+        expect(response).to have_http_status :bad_request
+      end
+
+      it 'render json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'render error message' do
+        err = JSON.parse(response.body)['message']
+        expect(err).to eq '現在のパスワードを入力してください'
+      end
+    end
+
+    # 現在のパスワードが間違っている
+    context 'when current_password is wrong' do
+      let(:invalid_params) { attributes_for(:user).merge(current_password: 'wrong-password') }
+
+      before do
+        login_as tom
+        patch api_v1_auth_registrations_path, params: { user: invalid_params }
+      end
+
+      it 'responds :bad_request' do
+        expect(response).to have_http_status :bad_request
+      end
+
+      it 'render json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'render error message' do
+        err = JSON.parse(response.body)['message']
+        expect(err).to eq '現在のパスワードが間違っています'
+      end
+    end
+
     # ログインしてない
     context 'when user is not logged in' do
       before do
@@ -472,7 +522,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
     # 名前が空
     context 'when name is blank' do
-      let(:wrong_params) { attributes_for(:user, name: '  ') }
+      let(:wrong_params) {
+        attributes_for(:user, name: '  ').merge(current_password: tom.password)
+      }
 
       before do
         login_as tom
@@ -503,7 +555,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
     # 名前が長すぎる
     context 'when name is too long' do
-      let(:wrong_params) { attributes_for(:user, name: 'a' * 51) }
+      let(:wrong_params) {
+        attributes_for(:user, name: 'a' * 51).merge(current_password: tom.password)
+      }
 
       before do
         login_as tom
@@ -534,7 +588,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
     # メールアドレスが空
     context 'when email is blank' do
-      let(:wrong_params) { attributes_for(:user, email: '  ') }
+      let(:wrong_params) {
+        attributes_for(:user, email: '  ').merge(current_password: tom.password)
+      }
 
       before do
         login_as tom
@@ -565,7 +621,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
     # メールアドレスが長い
     context 'when email is too long' do
-      let(:wrong_params) { attributes_for(:user, email: 'a' * 240 + '@example.com') }
+      let(:wrong_params) {
+        attributes_for(:user, email: 'a' * 240 + '@example.com').merge(current_password: tom.password)
+      }
 
       before do
         login_as tom
@@ -596,7 +654,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
     # メールアドレスの形式が正しくない
     context 'when email is wrong format' do
-      let(:wrong_params) { attributes_for(:user, email: 'wrong@format,com') }
+      let(:wrong_params) {
+        attributes_for(:user, email: 'wrong@format,com').merge(current_password: tom.password)
+      }
 
       before do
         login_as tom
@@ -627,7 +687,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
     # アバターのファイルの拡張子が不正
     context 'when avatar extension is invalid' do
-      let(:wrong_params) { attributes_for(:user, :invalid_avatar) }
+      let(:wrong_params) {
+        attributes_for(:user, :invalid_avatar).merge(current_password: tom.password)
+      }
 
       before do
         login_as tom
@@ -659,7 +721,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
     # パスワードが短い
     context 'when password is too short' do
-      let(:wrong_params) { attributes_for(:user, password: 'foo', password_confirmation: 'foo') }
+      let(:wrong_params) {
+        attributes_for(:user, password: 'foo', password_confirmation: 'foo').merge(current_password: tom.password)
+      }
 
       before do
         login_as tom
@@ -690,7 +754,9 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
     # パスワード（確認用）がパスワードと一致しない
     context 'when password_confirmation is wrong' do
-      let(:wrong_params) { attributes_for(:user, password_confirmation: 'foobar') }
+      let(:wrong_params) {
+        attributes_for(:user, password_confirmation: 'foobar').merge(current_password: tom.password)
+      }
 
       before do
         login_as tom

@@ -16,7 +16,23 @@ class Api::V1::Auth::RegistrationsController < Api::V1::ApplicationController
 
   # PATCH /api/v1/auth/registrations
   def update
-    if current_user.update_without_password(user_params)
+    params = user_params
+
+    # 現在のパスワードが入力されていない
+    unless params[:current_password]
+      render json: { message: '現在のパスワードを入力してください' }, status: :bad_request
+      return
+    end
+
+    # 現在のパスワードが不正
+    unless current_user.valid_password?(params[:current_password])
+      render json: { message: '現在のパスワードが間違っています'}, status: :bad_request
+      return
+    end
+
+    params.delete(:current_password)
+
+    if current_user.update_without_password(params)
       render json: { data: current_user }, status: :ok
     else
       render json: { errors: current_user.errors.full_messages }, status: :bad_request
@@ -36,6 +52,6 @@ class Api::V1::Auth::RegistrationsController < Api::V1::ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation, :avatar, :current_password)
   end
 end
