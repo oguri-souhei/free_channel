@@ -20,13 +20,13 @@ class Api::V1::Auth::RegistrationsController < Api::V1::ApplicationController
 
     # 現在のパスワードが入力されていない
     unless params[:current_password]
-      render json: { message: '現在のパスワードを入力してください' }, status: :bad_request
+      render json: { errors: '現在のパスワードを入力してください' }, status: :bad_request
       return
     end
 
     # 現在のパスワードが不正
     unless current_user.valid_password?(params[:current_password])
-      render json: { message: '現在のパスワードが間違っています'}, status: :bad_request
+      render json: { errors: '現在のパスワードが間違っています'}, status: :bad_request
       return
     end
 

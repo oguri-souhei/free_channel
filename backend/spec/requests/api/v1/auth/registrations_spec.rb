@@ -472,7 +472,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       end
 
       it 'render error message' do
-        err = JSON.parse(response.body)['message']
+        err = JSON.parse(response.body)['errors']
         expect(err).to eq '現在のパスワードを入力してください'
       end
     end
@@ -495,7 +495,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       end
 
       it 'render error message' do
-        err = JSON.parse(response.body)['message']
+        err = JSON.parse(response.body)['errors']
         expect(err).to eq '現在のパスワードが間違っています'
       end
     end
