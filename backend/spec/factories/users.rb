@@ -19,4 +19,12 @@ FactoryBot.define do
     password { '  ' }
     password_confirmation { '  ' }
   end
+
+  trait :avatar do
+    avatar { Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/files/test.jpg')) }
+  end
+
+  trait :invalid_avatar do
+    avatar { Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/files/test.txt')) }
+  end
 end

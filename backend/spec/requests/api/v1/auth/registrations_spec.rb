@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
   let(:tom) { create(:tom) }
-  let(:user_params) { attributes_for(:tom) }
+  let(:user_params) { attributes_for(:tom, :avatar) }
 
   describe 'POST /api/v1/auth/sign_up' do
     # 正常系
@@ -27,6 +27,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
           expect(data['password']).to be_blank
           expect(data['password_confirmation']).to be_blank
           expect(data['encrypted_password']).to be_blank
+          expect(data['avatar']['url']).to include user_params[:avatar].original_filename
         end
       end
 
@@ -324,6 +325,40 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       end
     end
 
+    # アバターのファイルの拡張子が不正
+    context 'when avatar extension is invalid' do
+      let(:invalid_params) { attributes_for(:tom, :invalid_avatar) }
+
+      it 'responds :bad_request' do
+        post api_v1_auth_sign_up_path, params: { user: invalid_params }
+        expect(response).to have_http_status :bad_request
+      end
+
+      it 'renders json' do
+        post api_v1_auth_sign_up_path, params: { user: invalid_params }
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders errors' do
+        post api_v1_auth_sign_up_path, params: { user: invalid_params }
+        errors = JSON.parse(response.body)['errors']
+        aggregate_failures do
+          expect(errors[0]).to eq 'アバター"txt"ファイルのアップロードは許可されていません。アップロードできるファイルタイプ：jpg, jpeg, png'
+        end
+      end
+
+      it 'does not create a record' do
+        expect {
+          post api_v1_auth_sign_up_path, params: { user: invalid_params }
+        }.to_not change(User, :count)
+      end
+
+      it 'does not create sessions' do
+        post api_v1_auth_sign_up_path, params: { user: invalid_params }
+        expect(controller.user_signed_in?).to be_falsey
+      end
+    end
+
     # ユーザーが既にログインしている
     context 'when user is logged in' do
       before do
@@ -586,6 +621,38 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
         aggregate_failures do
           expect(tom.name).to_not eq wrong_params[:name]
           expect(tom.email).to_not eq wrong_params[:email]
+        end
+      end
+    end
+
+    # アバターのファイルの拡張子が不正
+    context 'when avatar extension is invalid' do
+      let(:wrong_params) { attributes_for(:user, :invalid_avatar) }
+
+      before do
+        login_as tom
+        patch api_v1_auth_registrations_path, params: { user: wrong_params }
+      end
+
+      it 'responds :bad_request' do
+        expect(response).to have_http_status :bad_request
+      end
+
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders errors messages' do
+        err = JSON.parse(response.body)['errors']
+        expect(err[0]).to eq 'アバター"txt"ファイルのアップロードは許可されていません。アップロードできるファイルタイプ：jpg, jpeg, png'
+      end
+
+      it 'does not update record' do
+        tom.reload
+        aggregate_failures do
+          expect(tom.name).to_not eq wrong_params[:name]
+          expect(tom.email).to_not eq wrong_params[:email]
+          expect(tom.avatar.identifier).to_not eq wrong_params[:avatar].original_filename
         end
       end
     end
