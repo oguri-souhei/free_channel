@@ -59,6 +59,21 @@ RSpec.describe User, type: :model do
     context 'password_confirmation' do
       it { should validate_presence_of(:password_confirmation).allow_nil.with_message('を入力してください') }
     end
+
+    # アバター
+    context 'avatar' do
+      it 'is valid with allow formatted file' do
+        user.avatar = File.open("#{Rails.root}/spec/files/test.jpg")
+        user.valid?
+        expect(user.errors[:avatar]).to be_blank
+      end
+
+      it 'is invalid with forbidden type file' do
+        user.avatar = File.open("#{Rails.root}/spec/files/test.txt")
+        user.valid?
+        expect(user.errors[:avatar]).to include '"txt"ファイルのアップロードは許可されていません。アップロードできるファイルタイプ：jpg, jpeg, png'
+      end
+    end
   end
 
   describe 'Methods' do

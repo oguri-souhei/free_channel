@@ -27,7 +27,7 @@ ja:
         id: ID
         name: 名前
         email: メールアドレス
-        profile_image: プロフィール画像
+        avatar: アバター
         password: パスワード
         password_confirmation: パスワード（確認用）
       room:
