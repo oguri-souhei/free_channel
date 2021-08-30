@@ -107,7 +107,7 @@ RSpec.describe 'Api::V1::Auth::Sessions', type: :request do
 
     context 'when user is logged in' do
       before do
-        sign_in tom
+        login_as tom
         post api_v1_auth_login_path, params: {
           user: { email: tom.email, password: tom.password }
         }
@@ -131,7 +131,7 @@ RSpec.describe 'Api::V1::Auth::Sessions', type: :request do
   describe 'DELETE /api/v1/auth/logout' do
     context 'when user is logged in' do
       before do
-        sign_in tom
+        login_as tom
         delete api_v1_auth_logout_path
       end
 

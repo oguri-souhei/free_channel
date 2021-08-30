@@ -53,7 +53,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
   describe 'GET /api/v1/login_user' do
     context 'when user is logged in' do
       before do
-        sign_in tom
+        login_as tom
         get api_v1_login_user_path
       end
 

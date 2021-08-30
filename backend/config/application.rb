@@ -41,6 +41,10 @@ module App
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
 
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore
+    config.middleware.use ActionDispatch::ContentSecurityPolicy::Middleware
+
     config.generators do |g|
       g.test_framework :rspec, view_specs: false, routing_specs: false
     end

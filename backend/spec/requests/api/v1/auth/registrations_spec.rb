@@ -327,7 +327,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
     # ユーザーが既にログインしている
     context 'when user is logged in' do
       before do
-        sign_in tom
+        login_as tom
       end
 
       it 'responds :forbidden' do
@@ -360,7 +360,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
     # 正常系
     context 'when success' do
       before do
-        sign_in tom
+        login_as tom
         patch api_v1_auth_registrations_path, params: { user: update_user_params }
       end
 
@@ -390,7 +390,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       let(:user_params) { attributes_for(:user, password: '', password_confirmation: '') }
 
       before do
-        sign_in tom
+        login_as tom
         patch api_v1_auth_registrations_path, params: { user: user_params }
       end
 
@@ -440,7 +440,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       let(:wrong_params) { attributes_for(:user, name: '  ') }
 
       before do
-        sign_in tom
+        login_as tom
         patch api_v1_auth_registrations_path, params: { user: wrong_params }
       end
 
@@ -471,7 +471,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       let(:wrong_params) { attributes_for(:user, name: 'a' * 51) }
 
       before do
-        sign_in tom
+        login_as tom
         patch api_v1_auth_registrations_path, params: { user: wrong_params }
       end
 
@@ -502,7 +502,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       let(:wrong_params) { attributes_for(:user, email: '  ') }
 
       before do
-        sign_in tom
+        login_as tom
         patch api_v1_auth_registrations_path, params: { user: wrong_params }
       end
 
@@ -533,7 +533,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       let(:wrong_params) { attributes_for(:user, email: 'a' * 240 + '@example.com') }
 
       before do
-        sign_in tom
+        login_as tom
         patch api_v1_auth_registrations_path, params: { user: wrong_params }
       end
 
@@ -564,7 +564,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       let(:wrong_params) { attributes_for(:user, email: 'wrong@format,com') }
 
       before do
-        sign_in tom
+        login_as tom
         patch api_v1_auth_registrations_path, params: { user: wrong_params }
       end
 
@@ -595,7 +595,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       let(:wrong_params) { attributes_for(:user, password: 'foo', password_confirmation: 'foo') }
 
       before do
-        sign_in tom
+        login_as tom
         patch api_v1_auth_registrations_path, params: { user: wrong_params }
       end
 
@@ -626,7 +626,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
       let(:wrong_params) { attributes_for(:user, password_confirmation: 'foobar') }
 
       before do
-        sign_in tom
+        login_as tom
         patch api_v1_auth_registrations_path, params: { user: wrong_params }
       end
 
@@ -657,7 +657,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
     # 正常系
     context 'when success' do
       before do
-        sign_in tom
+        login_as tom
       end
 
       it 'responds :ok' do
