@@ -425,7 +425,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
     # パスワードがからでも更新できる
     context 'when password is blank' do
       let(:user_params) {
-        attributes_for(:user ,password: '', password_confirmation: '').merge(current_password: tom.password)
+        attributes_for(:user , password: '', password_confirmation: '').merge(current_password: tom.password)
       }
 
       before do
@@ -473,7 +473,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
       it 'render error message' do
         err = JSON.parse(response.body)['errors']
-        expect(err).to eq '現在のパスワードを入力してください'
+        expect(err[0]).to eq '現在のパスワードを入力してください'
       end
     end
 
@@ -496,7 +496,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
       it 'render error message' do
         err = JSON.parse(response.body)['errors']
-        expect(err).to eq '現在のパスワードが間違っています'
+        expect(err[0]).to eq '現在のパスワードが間違っています'
       end
     end
 
