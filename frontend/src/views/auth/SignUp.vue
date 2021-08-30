@@ -14,19 +14,45 @@
         </div>
 
         <ValidationProvider v-slot="{ errors }" name="名前" rules="required|max:50">
-          <v-text-field v-model="user.name" :counter="50" label="名前" :error-messages="errors" required></v-text-field>
+          <v-text-field
+            v-model="user.name"
+            id="name"
+            :counter="50"
+            label="名前"
+            :error-messages="errors"
+            required
+          ></v-text-field>
         </ValidationProvider>
 
         <ValidationProvider v-slot="{ errors }" name="メールアドレス" rules="required|max:250|email">
-          <v-text-field v-model="user.email" :counter="250" label="メールアドレス" :error-messages="errors" required></v-text-field>
+          <v-text-field
+            v-model="user.email"
+            id="email"
+            :counter="250"
+            label="メールアドレス"
+            :error-messages="errors"
+            required
+          ></v-text-field>
         </ValidationProvider>
 
         <ValidationProvider v-slot="{ errors }" name="パスワード" rules="required|min:6">
-          <v-text-field v-model="user.password" label="パスワード" :error-messages="errors" required></v-text-field>
+          <v-text-field
+            v-model="user.password"
+            id="password"
+            label="パスワード"
+            :error-messages="errors"
+            required
+          ></v-text-field>
         </ValidationProvider>
 
-        <ValidationProvider v-slot="{ errors }" name="パスワード（確認用）" rules="required">
-          <v-text-field v-model="user.password_confirmation" label="パスワード（確認用）" :error-messages="errors" required></v-text-field>
+        <ValidationProvider v-slot="{ errors }" name="パスワード（確認用）" rules="required|confirmed:パスワード">
+          <v-text-field
+            v-model="user.password_confirmation"
+            id="password_confirmation"
+            label="パスワード（確認用）"
+            :error-messages="errors"
+            required
+          ></v-text-field>
         </ValidationProvider>
 
         <v-btn color="primary" @click="signUp" :disabled="invalid">登録</v-btn>
@@ -37,7 +63,7 @@
 </template>
 
 <script>
-import { required, min, email, max } from 'vee-validate/dist/rules'
+import { required, min, email, max, confirmed } from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 
 setInteractionMode('eager')
@@ -60,6 +86,11 @@ extend('max', {
 extend('email', {
   ...email,
   message: '{_field_}は正しい形式で入力してください',
+})
+
+extend('confirmed', {
+  ...confirmed,
+  message: '{_field_}と{target}の入力が一致しません'
 })
 
 export default {
