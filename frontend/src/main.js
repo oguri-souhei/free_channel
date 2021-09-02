@@ -14,7 +14,7 @@ Vue.use(axiosUtils, { axios });
 (async () => {
   const currentUser = await getCurrentUser()
   store.dispatch('setCurrentUser', currentUser)
-  console.log(store.state.currentUser)
+  console.log({ currentUser: store.state.currentUser})
 })()
 
 new Vue({
