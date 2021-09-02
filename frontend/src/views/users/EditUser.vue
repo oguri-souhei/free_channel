@@ -67,7 +67,7 @@
 
         <v-btn color="primary" @click="updateUser" :disabled="invalid">送信</v-btn>
       </v-form>
-    
+
     </ValidationObserver>
     </div>
 </template>
