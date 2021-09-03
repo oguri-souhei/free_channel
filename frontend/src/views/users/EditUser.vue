@@ -13,6 +13,19 @@
           </ul>
         </div>
 
+        <ValidationProvider v-slot="{ errors, validate }" name="アバター" rules="ext:jpg,jpeg,png">
+          <Avatar :url="user.avatar && user.avatar.url"></Avatar>
+          <v-file-input
+            v-model="user.avatar"
+            id="avatar"
+            label="アバター"
+            truncate-length="15"
+            :error-messages="errors"
+            @change="validate"
+            show-size
+          ></v-file-input>
+        </ValidationProvider>
+
         <ValidationProvider v-slot="{ errors }" name="名前" rules="required|max:50">
           <v-text-field
             v-model="user.name"
@@ -73,7 +86,8 @@
 </template>
 
 <script>
-import { required, min, email, max, confirmed } from 'vee-validate/dist/rules'
+import Avatar from '@/components/users/Avatar.vue'
+import { required, min, email, max, confirmed, ext } from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 
 setInteractionMode('eager')
@@ -103,11 +117,17 @@ extend('confirmed', {
   message: '{_field_}と{target}の入力が一致しません'
 })
 
+extend('ext', {
+  ...ext,
+  message: 'アップロードできる拡張子は jpg, jpeg, png です'
+})
+
 export default {
-  name: 'SignUp',
+  name: 'EditUser',
   components: {
     ValidationObserver,
     ValidationProvider,
+    Avatar,
   },
   data() {
     return {
@@ -116,7 +136,8 @@ export default {
         email: '',
         password: '',
         password_confirmation: '',
-        current_password: ''
+        current_password: '',
+        avatar: null
       },
       errors: []
     }
@@ -148,9 +169,9 @@ export default {
         this.errors = response.data.errors
       }
 
-      // 既にログインしている
+      // ログインしていない
       else if (response.status === 403) {
-        this.$store.dispatch('setFlash', { msg: '既にログインしています', type: 'error' })
+        this.$store.dispatch('setFlash', { msg: 'この操作は禁止されています', type: 'error' })
         this.$router.push({ path: '/login', query: { path: this.$route.fullpath }})
       }
 
@@ -164,6 +185,7 @@ export default {
     const currentUser = this.$store.state.currentUser
     this.user.name = currentUser.name
     this.user.email = currentUser.email
+    this.user.avatar = currentUser.avatar
   }
 }
 </script>

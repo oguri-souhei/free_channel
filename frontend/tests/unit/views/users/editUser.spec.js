@@ -1,4 +1,5 @@
 import { mount, shallowMount,createLocalVue } from '@vue/test-utils'
+import { nextTick } from 'vue'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import router from '@/router/index'
@@ -42,7 +43,7 @@ describe('EditUser.vue', () => {
   describe('Data', () => {
     // データオブジェクトに現在のユーザーの情報が設定されているか？
     it('has current user data', async () => {
-      const wrapper = mount(EditUser, { store, localVue })
+      const wrapper = shallowMount(EditUser, { store, localVue })
 
       expect(wrapper.vm.$data.user.name).toBe(mockUser.name)
       expect(wrapper.vm.$data.user.email).toBe(mockUser.email)
@@ -56,33 +57,61 @@ describe('EditUser.vue', () => {
     describe('#updateUser', () => {
 
       const updatedUser = { id: 1, name: 'foobazz', email: 'foobazz@exmaple.com' }
-      const resolvedResponse = { data: { data: updatedUser }, status: 200 }
-      const rejectedResponse = { response: { data: { errors: ['エラーメッセージ'] }, status: 400 }}
+      const resp_200 = { data: { data: updatedUser }, status: 200 }
+      const resp_400 = { response: { data: { errors: ['エラーメッセージ'] }, status: 400 }}
+      const resp_403 = { response: { data: { errors: ['エラーメッセージ'] }, status: 403 }}
+      const resp_500 = { response: { data: null, status: 500 }}
 
       axios.patch
-        .mockResolvedValueOnce(resolvedResponse)
-        .mockResolvedValueOnce(resolvedResponse)
-        .mockRejectedValueOnce(rejectedResponse)
+        .mockResolvedValueOnce(resp_200)
+        .mockResolvedValueOnce(resp_200)
+        .mockResolvedValueOnce(resp_200)
+        .mockRejectedValueOnce(resp_400)
+        .mockRejectedValueOnce(resp_403)
+        .mockRejectedValueOnce(resp_500)
 
       describe('when status is 200', () => {
         it('update currentUser', async () => {
-          const wrapper = mount(EditUser, { store, router, localVue })
+          const wrapper = shallowMount(EditUser, { store, router, localVue })
           await wrapper.vm.updateUser()
           expect(wrapper.vm.$store.state.currentUser).toEqual(updatedUser)
         })
 
         it('update flash', async () => {
-          const wrapper = mount(EditUser, { store, router, localVue })
+          const wrapper = shallowMount(EditUser, { store, router, localVue })
           await wrapper.vm.updateUser()
           expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'アカウントを編集しました', type: 'success'})
+        })
+
+        it('push home page', async () => {
+          const wrapper = shallowMount(EditUser, { store, router, localVue })
+          wrapper.vm.updateUser()
+          await nextTick()
+          expect(wrapper.vm.$route.path).toBe('/')
         })
       })
 
       describe('when status is 400', () => {
         it('update errors', async () => {
-          const wrapper = mount(EditUser, { store, router, vuetify, localVue })
+          const wrapper = shallowMount(EditUser, { store, router, localVue })
           await wrapper.vm.updateUser()
           expect(wrapper.vm.$data.errors).toEqual(['エラーメッセージ'])
+        })
+      })
+
+      describe('when status is 403', () => {
+        it('set flash', async () => {
+          const wrapper = shallowMount(EditUser, { store, router, localVue })
+          await wrapper.vm.updateUser()
+          expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'この操作は禁止されています', type: 'error' })
+        })
+
+        it('push login page', async () => {
+          const wrapper = shallowMount(EditUser, { store, router, localVue })
+          let q = wrapper.vm.$route.fullPath
+          wrapper.vm.updateUser()
+          await nextTick()
+          expect(wrapper.vm.$route.path).toBe('/login')
         })
       })
     })
@@ -91,7 +120,7 @@ describe('EditUser.vue', () => {
   // バリデーション
   describe('Validation', () => {
     it('validates name presence', async () => {
-      const wrapper = mount(EditUser, { store, localVue})
+      const wrapper = mount(EditUser, { store, vuetify, localVue})
       const input = wrapper.find('#name')
 
       input.setValue('')
@@ -101,7 +130,7 @@ describe('EditUser.vue', () => {
     })
 
     it('validates email presence', async () => {
-      const wrapper = mount(EditUser, { store, localVue})
+      const wrapper = mount(EditUser, { store, vuetify,localVue})
       const input = wrapper.find('#name')
 
       input.setValue('a'.repeat(51))
@@ -111,7 +140,7 @@ describe('EditUser.vue', () => {
     })
 
     it('validates email presence', async () => {
-      const wrapper = mount(EditUser, { store, localVue})
+      const wrapper = mount(EditUser, { store, vuetify, localVue})
       const input = wrapper.find('#email')
 
       input.setValue('')
@@ -121,7 +150,7 @@ describe('EditUser.vue', () => {
     })
 
     it('validates email length', async () => {
-      const wrapper = mount(EditUser, { store, localVue})
+      const wrapper = mount(EditUser, { store, vuetify,localVue})
       const input = wrapper.find('#email')
 
       input.setValue('a'.repeat(240) + '@example.com')
@@ -131,7 +160,7 @@ describe('EditUser.vue', () => {
     })
 
     it('validates email format', async () => {
-      const wrapper = mount(EditUser, { store, localVue})
+      const wrapper = mount(EditUser, { store, vuetify,localVue})
       const input = wrapper.find('#email')
 
       input.setValue('wrong@bar,com')
@@ -141,7 +170,7 @@ describe('EditUser.vue', () => {
     })
 
     it('validates password length', async () => {
-      const wrapper = mount(EditUser, { store, localVue})
+      const wrapper = mount(EditUser, { store, vuetify, localVue})
       const input = wrapper.find('#password')
 
       input.setValue('foo')
@@ -151,7 +180,7 @@ describe('EditUser.vue', () => {
     })
 
     it('validates password confirmed', async () => {
-      const wrapper = mount(EditUser, { store, localVue})
+      const wrapper = mount(EditUser, { store, vuetify,localVue})
 
       wrapper.find('#password').setValue('password')
       wrapper.find('#password_confirmation').setValue('foobar')

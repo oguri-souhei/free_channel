@@ -13,6 +13,18 @@
           </ul>
         </div>
 
+        <ValidationProvider v-slot="{ errors, validate }" name="アバター" rules="ext:jpg,jpeg,png">
+          <v-file-input
+            v-model="user.avatar"
+            id="avatar"
+            label="アバター"
+            truncate-length="15"
+            :error-messages="errors"
+            @change="validate"
+            show-size
+          ></v-file-input>
+        </ValidationProvider>
+
         <ValidationProvider v-slot="{ errors }" name="名前" rules="required|max:50">
           <v-text-field
             v-model="user.name"
@@ -63,7 +75,7 @@
 </template>
 
 <script>
-import { required, min, email, max, confirmed } from 'vee-validate/dist/rules'
+import { required, min, email, max, confirmed, ext } from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
 
 setInteractionMode('eager')
@@ -91,6 +103,11 @@ extend('email', {
 extend('confirmed', {
   ...confirmed,
   message: '{_field_}と{target}の入力が一致しません'
+})
+
+extend('ext', {
+  ...ext,
+  message: 'アップロードできる拡張子は jpg, jpeg, png です'
 })
 
 export default {
@@ -123,7 +140,7 @@ export default {
         this.$store.dispatch('setCurrentUser', user)
         this.$store.dispatch('setFlash', { msg: 'アカウントを登録しました', type: 'success' })
 
-        this.$router.push('/')
+        this.$router.push('/').catch(() => null)
       }
 
       // パラメータが不正
@@ -135,7 +152,7 @@ export default {
       else if (response.status === 403) {
         this.$store.dispatch('setFlash', { msg: '既にログインしています', type: 'error' })
 
-        this.$router.push('/')
+        this.$router.push('/').catch(() => null)
       }
 
       // その他

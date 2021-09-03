@@ -98,7 +98,7 @@ export default {
           // 認証が必要なページから遷移してきた場合は、そのページへ移動
           this.$router.push({ path: this.$route.query.path })
         } else {
-          this.$router.push({ path: '/' })
+          this.$router.push({ path: '/' }).catch(() => null)
         }
       }
 
@@ -110,7 +110,7 @@ export default {
       // 既にログインしている場合
       else if (response.status === 403) {
         this.$store.dispatch('setFlash', { msg: '既にログインしています', type: 'warning' })
-        this.$router.push('/')
+        this.$router.push('/').catch(() => null)
       }
 
       // アカウントが見つからなかった場合
