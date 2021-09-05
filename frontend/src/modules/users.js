@@ -1,17 +1,33 @@
 import axios from 'axios'
 
 // ログイン中のユーザーを取得
-export async function getCurrentUser() {
-  const result = await axios.get('/api/v1/login_user').catch(err => err.response)
+async function getCurrentUser() {
+  const response = await axios.get('/api/v1/login_user').catch(err => err.response)
 
   return new Promise((resolve, reject) => {
-    if (result.status === 200) {
-      resolve(result.data.data)
+    if (response.status === 200) {
+      resolve(response.data.data)
     }
 
     else {
-      console.error(result)
-      reject(result)
+      reject(response)
     }
   })
 }
+
+// idからユーザーを取得
+async function getUser (id) {
+  const response = await axios.get('/api/v1/users/' + id).catch(err => err.response)
+
+  return new Promise((resolve, reject) => {
+    if (response.status === 200) {
+      resolve(response)
+    }
+
+    else {
+      reject(response)
+    }
+  })
+}
+
+export { getCurrentUser, getUser }

@@ -26,10 +26,17 @@ const routes = [
     name: 'Login',
     component: () => import('../views/auth/Login.vue')
   },
+  // ユーザー編集ページ
   {
     path: '/users/edit',
     name: 'EditUser',
     component: () => import('../views/users/EditUser.vue')
+  },
+  // ユーザー個別ページ
+  {
+    path: '/users/:id',
+    name: 'User',
+    component: () => import('../views/users/User.vue')
   }
 ]
 
