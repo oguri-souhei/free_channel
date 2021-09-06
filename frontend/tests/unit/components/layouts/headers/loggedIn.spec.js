@@ -9,7 +9,6 @@ import LoggedIn from '@/components/layouts/headers/LoggedIn.vue'
 import { nextTick } from "vue"
 
 const mockUser = { id: 1, name: 'foo', email: 'foo@bar.com' }
-store.dispatch('setCurrentUser', mockUser)
 
 jest.mock('axios')
 
@@ -32,18 +31,21 @@ describe('LoggedIn.vue', () => {
     describe('logout', () => {
       describe('when status is 200', () => {
         it('sets flash', async () => {
+          store.dispatch('setCurrentUser', mockUser)
           const wrapper = shallowMount(LoggedIn, { store, router, localVue })
           await wrapper.vm.logout()
           expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'ログアウトしました', type: 'success' })
         })
 
-        it('sets currentUser', async () => {
+        it('removes currentUser', async () => {
+          store.dispatch('setCurrentUser', mockUser)
           const wrapper = shallowMount(LoggedIn, { store, router, localVue })
           await wrapper.vm.logout()
           expect(wrapper.vm.$store.state.currentUser).toBeNull()
         })
 
         it('push /', async () => {
+          store.dispatch('setCurrentUser', mockUser)
           const wrapper = shallowMount(LoggedIn, { store, router, localVue })
           wrapper.vm.logout()
           await nextTick()
@@ -53,12 +55,14 @@ describe('LoggedIn.vue', () => {
 
       describe('when other status', () => {
         it('sets flash', async () => {
+          store.dispatch('setCurrentUser', mockUser)
           const wrapper = shallowMount(LoggedIn, { store, router, localVue })
           await wrapper.vm.logout()
           expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'ログアウトに失敗しました', type: 'error' })
         })
 
         it('push /', async () => {
+          store.dispatch('setCurrentUser', mockUser)
           const wrapper = shallowMount(LoggedIn, { store, router, localVue })
           wrapper.vm.logout()
           await nextTick()

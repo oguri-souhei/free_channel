@@ -67,13 +67,13 @@ export default {
       // ユーザーが見つからなかった
       else if (response.status === 404) {
         this.$store.dispatch('setFlash', { msg: 'ユーザーが見つかりませんでした', type: 'warning'})
-        this.$router.push('/')
+        this.$router.push('/').catch(() => null)
       }
 
       // その他のエラー
       else {
         this.$store.dispatch('setFlash', { msg: '未知のエラー', type: 'error' })
-        this.$router.push('/')
+        this.$router.push('/').catch(() => null)
       }
     }
   },

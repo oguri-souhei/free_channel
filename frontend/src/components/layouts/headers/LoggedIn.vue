@@ -2,7 +2,7 @@
   <v-tabs>
     <v-tabs-slider style="opacity:0"></v-tabs-slider>
 
-    <v-tab to="#">アカウント</v-tab>
+    <v-tab :to="{ name: 'User', params: { id: user.id }}">アカウント</v-tab>
     <v-tab @click="logout">ログアウト</v-tab>
   </v-tabs>
 </template>
@@ -10,6 +10,11 @@
 <script>
 export default {
   name: 'LoggedIn',
+  data() {
+    return {
+      user: this.$store.state.currentUser
+    }
+  },
   methods: {
     async logout() {
       const response = await this.$http.delete('/api/v1/auth/logout').catch(err => err.response)
