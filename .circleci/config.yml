@@ -15,6 +15,7 @@ commands:
           cache-key: "yarn.lock"
 
 jobs:
+  working_directory: ~/backend
   build:
     docker:
       - image: circleci/ruby:3.0.2-node
