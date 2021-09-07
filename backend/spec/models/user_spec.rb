@@ -4,6 +4,10 @@ RSpec.describe User, type: :model do
   let(:user) { build(:user) }
   let(:tom) { create(:tom) }
 
+  describe 'Association' do
+    it { should have_many :rooms }
+  end
+
   describe 'Validation' do
     # 名前
     context 'name' do
