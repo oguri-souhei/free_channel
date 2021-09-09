@@ -2,6 +2,7 @@ class Room < ApplicationRecord
   include RoomsHelper
 
   belongs_to :user
+  has_many :comments, dependent: :destroy
 
   validates :name, presence: true, length: { maximum: 300 }
   validates :user_id, presence: true, numericality: { only_integer: true }

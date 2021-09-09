@@ -8,6 +8,14 @@ RSpec.describe Room, type: :model do
 
   describe 'Association' do
     it { should belong_to :user }
+    it { should have_many :comments }
+
+    it 'is dependent destroy user' do
+      tom_room
+      expect {
+        tom.destroy
+      }.to change(Room, :count).by(-1)
+    end
   end
 
   describe 'Validation' do
