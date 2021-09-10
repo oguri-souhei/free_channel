@@ -63,6 +63,26 @@ const routes = [
       title: 'アカウント | ' + APP_NAME,
       requiresAuth: null
     }
+  },
+  // ルーム作成ページ
+  {
+    path: '/rooms/new',
+    name: 'NewRoom',
+    component: () => import('../views/rooms/NewRoom.vue'),
+    meta: {
+      title: 'ルーム作成 | ' + APP_NAME,
+      requiresAuth: true
+    }
+  },
+  // ルーム個別ページ
+  {
+    path: '/rooms/:id',
+    name: 'ShowRoom',
+    component: () => import('../views/rooms/ShowRoom.vue'),
+    meta: {
+      title: 'ルーム | ' + APP_NAME,
+      requiresAuth: null
+    }
   }
 ]
 
