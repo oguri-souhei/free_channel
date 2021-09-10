@@ -10,7 +10,7 @@ class Api::V1::RoomsController < Api::V1::ApplicationController
     render json: { data: @room }, status: :ok
   end
 
-  # POST /rooms
+  # POST /api/v1/rooms
   def create
     if @room.save
       render json: { data: @room }, status: :ok
@@ -19,7 +19,7 @@ class Api::V1::RoomsController < Api::V1::ApplicationController
     end
   end
 
-  # PATCH /rooms/:id
+  # PATCH /api/v1/rooms/:id
   def update
     if @room.update(room_params)
       render json: { data: @room }, status: :ok
