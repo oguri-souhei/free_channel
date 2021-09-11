@@ -12,7 +12,8 @@ class Comment < ApplicationRecord
       sentence: sentence,
       created_at: created_at,
       avatar: user.avatar,
-      user_id: user_id
+      user_id: user_id,
+      user_name: user.name
     }
   end
 end

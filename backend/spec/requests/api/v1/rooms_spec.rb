@@ -24,9 +24,10 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         get api_v1_room_path(room)
         data = JSON.parse(response.body)['data']
         aggregate_failures do
-          expect(data['id']).to eq room.id
-          expect(data['name']).to eq room.name
-          expect(data['category']).to eq room.category
+          expect(data['room']['id']).to eq room.id
+          expect(data['room']['name']).to eq room.name
+          expect(data['room']['category']).to eq room.category
+          expect(data['comments']).to eq room.comments
         end
       end
     end

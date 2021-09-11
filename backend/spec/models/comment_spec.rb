@@ -10,7 +10,6 @@ RSpec.describe Comment, type: :model do
     it { should belong_to(:user) }
     it { should belong_to(:room) }
 
-    # dependent: :destroyのテスト
     it 'is dependent destroy user' do
       tom_comment
       expect {
@@ -73,6 +72,7 @@ RSpec.describe Comment, type: :model do
           expect(tom_comment.data[:sentence]).to eq tom_comment.sentence
           expect(tom_comment.data[:created_at]).to eq tom_comment.created_at
           expect(tom_comment.data[:user_id]).to eq tom_comment.user_id
+          expect(tom_comment.data[:user_name]).to eq tom_comment.user.name
         end
       end
     end
