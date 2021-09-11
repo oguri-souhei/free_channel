@@ -64,4 +64,17 @@ RSpec.describe Comment, type: :model do
       end
     end
   end
+
+  describe 'Methods' do
+    context '#data' do
+      it 'returns data' do
+        aggregate_failures do
+          expect(tom_comment.data[:id]).to eq tom_comment.id
+          expect(tom_comment.data[:sentence]).to eq tom_comment.sentence
+          expect(tom_comment.data[:created_at]).to eq tom_comment.created_at
+          expect(tom_comment.data[:user_id]).to eq tom_comment.user_id
+        end
+      end
+    end
+  end
 end
