@@ -15,8 +15,14 @@ localVue.use(Vuex)
 
 jest.mock('axios')
 
-const mockRoom = { id: 1, name: 'Sample Room', category: 'プログラミング' }
-const resp_200 = { data: { data: mockRoom }, status: 200 }
+const mockUser = { id: 1, name: 'mock user', email: 'foo@bar.com' }
+const mockRoom = { id: 1, name: 'Sample Room', category: 'プログラミング', user_id: mockUser.id }
+const comments = [
+  { id: 1, sentence: 'first comment', user_name: 'foo', user_id: 1, created_at: '2021-09-10 13:18:57' },
+  { id: 2, sentence: 'second comment', user_name: 'bar', user_id: 2, created_at: '2021-09-10 13:18:57' },
+  { id: 3, sentence: 'third comment', user_name: 'foo', user_id: 1, created_at: '2021-09-10 13:18:57' }
+]
+const resp_200 = { data: { data: { room: mockRoom, comments: comments } }, status: 200 }
 const resp_404 = { response: { data: { error: '404' }, status: 404 }}
 const resp_500 = { response: { data: { msg: '500' }, status: 500 } }
 
@@ -36,6 +42,38 @@ describe('ShowRoom.vue', () => {
       setTimeout(() => {
         expect(wrapper.text()).toMatch(mockRoom.name)
       }, 1)
+    })
+
+    it('renders comments', () => {
+      axios.get.mockResolvedValueOnce(resp_200)
+      const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+      setTimeout(() => {
+        comments.forEach(comment => {
+          expect(wrapper.text()).toMatch(comment.sentence)
+        })
+      }, 1)
+    })
+  })
+
+  describe('Computed', () => {
+    describe('isOwner', () => {
+      it('returns true when current user is room owner', () => {
+        store.dispatch('setCurrentUser', mockUser)
+        axios.get.mockResolvedValueOnce(resp_200)
+        const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+        setTimeout(() => {
+          expect(wrapper.vm.isOwner).toBeTruthy()
+        }, 1);
+      })
+
+      it('returns false when current user is not room owner', () => {
+        store.dispatch('setCurrentUser', null)
+        axios.get.mockResolvedValueOnce(resp_200)
+        const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+        setTimeout(() => {
+          expect(wrapper.vm.isOwner).toBeFalsey()
+        }, 1);
+      })
     })
   })
 
