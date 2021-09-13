@@ -73,6 +73,7 @@ RSpec.describe Comment, type: :model do
           expect(tom_comment.data[:created_at]).to eq tom_comment.created_at
           expect(tom_comment.data[:user_id]).to eq tom_comment.user_id
           expect(tom_comment.data[:user_name]).to eq tom_comment.user.name
+          expect(tom_comment.data[:room_id]).to eq tom_comment.room_id
         end
       end
     end

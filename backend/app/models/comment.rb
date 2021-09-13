@@ -13,7 +13,8 @@ class Comment < ApplicationRecord
       created_at: created_at,
       avatar: user.avatar,
       user_id: user_id,
-      user_name: user.name
+      user_name: user.name,
+      room_id: room.id
     }
   end
 end
