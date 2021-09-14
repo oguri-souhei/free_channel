@@ -123,6 +123,11 @@ export default {
     createComment(e) {
       if (e.target.value.trim().length === 0) return // コメントが空の場合
       if (this.keyDownCode === 229) return // 229コードの場合（日本語変換確定時のEnterキー）は処理をスキップ
+      // ログインしていない
+      if (!this.$store.getters.isLoggedIn) {
+        this.$store.dispatch('setFlash', { msg: 'コメントするにはログインしてください', type: 'warning' })
+        this.$router.push({ path: '/login', query: { path: this.$route.fullPath }})
+      }
 
       const comment = { sentence: e.target.value, user_id: this.$store.state.currentUser.id, room_id: this.room.id }
       this.roomChannel.comment(comment)
@@ -131,6 +136,8 @@ export default {
   },
   created() {
     this.setRoom()
+
+    if (!this.$store.getters.isLoggedIn) return // ログインしていないならスキップ
 
     const that = this
     this.roomChannel = this.$cable.subscriptions.create({
