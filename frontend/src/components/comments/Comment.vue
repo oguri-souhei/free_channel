@@ -61,6 +61,7 @@ a {
 
 p {
   font-weight: bold;
+  white-space: pre-wrap;
 }
 
 .comment-wrapper {
