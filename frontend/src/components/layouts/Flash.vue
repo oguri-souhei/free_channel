@@ -26,7 +26,6 @@ export default {
       }, 3000)
     }
   },
-  // 初回アクセス時にflashが表示されない
   created() {
     if (this.flash.msg.length !== 0) {
       this.flag = true
@@ -41,8 +40,9 @@ export default {
 <style scoped>
 .flash {
   min-width: 300px;
-  position: absolute;
+  position: fixed;
   left: 5px;
   bottom: 5px;
+  z-index: 100;
 }
 </style>
