@@ -36,13 +36,12 @@
     </div>
     <div class="comment-field">
       <form>
-        <v-textarea
-          solo
-          label="コメントを入力"
+        <textarea
+          placeholder="コメントを入力"
           id="sentence"
           @keydown.enter.exact.prevent="keyDownEnter"
           @keyup.enter.exact="createComment"
-        ></v-textarea>
+        ></textarea>
       </form>
     </div>
   </div>
@@ -59,7 +58,9 @@ export default {
   data() {
     return {
       room: {},
-      comments: []
+      comments: [],
+      roomChannel: null,
+      keyDownCode: null
     }
   },
   computed: {
@@ -89,10 +90,6 @@ export default {
         this.$router.push('/').catch(() => null)
       }
     },
-    // enterを押した時のkeycodeを記録
-    keyDownEnter(e) {
-      this.keyDownCode = e.keyCode
-    },
     // ルームを削除
     async destroyRoom() {
       if (!window.confirm('このルームを本当に削除しますか？')) return
@@ -109,6 +106,7 @@ export default {
       else if (response.status === 403) {
         this.$store.dispatch('setFlash', { msg: 'この操作は禁止されています', type: 'error' })
       }
+
       // ルームが見つからない
       else if (response.status === 404) {
         this.$store.dispatch('setFlash', { msg: 'ルームを見つけることができませんでした', type: 'error' })
@@ -119,14 +117,33 @@ export default {
         this.$store.dispatch('setFlash', { msg: '未知のエラー', type: 'error' })
       }
     },
+    keyDownEnter(e) {
+      this.keyDownCode = e.keyCode // enterを押した時のkeycodeを記録
+    },
     createComment(e) {
       if (e.target.value.trim().length === 0) return // コメントが空の場合
-      console.log('created comment')
+      if (this.keyDownCode === 229) return // 229コードの場合（日本語変換確定時のEnterキー）は処理をスキップ
+
+      const comment = { sentence: e.target.value, user_id: this.$store.state.currentUser.id, room_id: this.room.id }
+      this.roomChannel.comment(comment)
       e.target.value = ''
     }
   },
   created() {
     this.setRoom()
+
+    const that = this
+    this.roomChannel = this.$cable.subscriptions.create({
+      channel: 'RoomChannel',
+      id: this.$route.params.id
+    }, {
+      received(comment) {
+        that.comments.push(comment)
+      },
+      comment(comment) {
+        this.perform('comment', { comment })
+      }
+    })
   }
 }
 </script>
@@ -139,6 +156,7 @@ h2 {
 .show-room {
   height: 100vh;
   width: 100%;
+  position: relative;
 }
 
 .room-header {
@@ -156,7 +174,7 @@ h2 {
 .comments {
   display: flex;
   flex-direction: column;
-  padding-bottom: 110px;
+  padding-bottom: 100px;
   padding-top: 30px;
   padding-left: 20px;
   padding-right: 20px
@@ -168,13 +186,24 @@ h2 {
 }
 
 .comment-field {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    height: 100px;
+    background: #fff;
+}
+
+form {
   width: 100%;
-  height: 100px;
-  position: fixed;
-  bottom: 0;
-  z-index: 1;
+  height: 100%;
+}
+
+textarea {
+  height: 100%;
+  width: 100%;
   background-color: #fff;
-  border: 1px solid #000;
+  border: 1px solid #ccc;
   border-radius: 3px;
+  padding: 5px;
 }
 </style>

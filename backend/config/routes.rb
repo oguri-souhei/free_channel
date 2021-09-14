@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
   devise_for :users, skip: %i(sessions passwords registrations)
 
   namespace :api do
