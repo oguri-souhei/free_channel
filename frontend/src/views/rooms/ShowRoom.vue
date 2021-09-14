@@ -49,6 +49,7 @@
 
 <script>
 import Comment from '@/components/comments/Comment.vue'
+import { scrollBottom } from '@/modules/scrollBottom'
 
 export default {
   name: 'ShowRoom',
@@ -146,6 +147,9 @@ export default {
     }, {
       received(comment) {
         that.comments.push(comment)
+        that.$nextTick(() => {
+          scrollBottom()
+        })
       },
       comment(comment) {
         this.perform('comment', { comment })
