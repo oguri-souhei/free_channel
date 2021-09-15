@@ -100,7 +100,7 @@ export default {
       // 成功時
       if (response.status === 200) {
         this.$store.dispatch('setFlash', { msg: 'ルームを削除しました', type: 'success' })
-        this.$router.push('/')
+        this.$router.push('/').catch(() => null)
       }
 
       // 他のユーザー
@@ -128,6 +128,7 @@ export default {
       if (!this.$store.getters.isLoggedIn) {
         this.$store.dispatch('setFlash', { msg: 'コメントするにはログインしてください', type: 'warning' })
         this.$router.push({ path: '/login', query: { path: this.$route.fullPath }})
+        return
       }
 
       const comment = { sentence: e.target.value, user_id: this.$store.state.currentUser.id, room_id: this.room.id }
@@ -155,6 +156,8 @@ export default {
         this.perform('comment', { comment })
       }
     })
+
+    console.log(this.roomChannel)
   }
 }
 </script>

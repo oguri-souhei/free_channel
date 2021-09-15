@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 import router from '@/router/index'
 import Vuex from 'vuex'
 import store from '@/store/index'
+import { nextTick } from 'vue'
 
 import ShowRoom from '@/views/rooms/ShowRoom.vue'
 
@@ -14,6 +15,11 @@ localVue.use(VueRouter)
 localVue.use(Vuex)
 
 jest.mock('axios')
+const $cable = {
+  subscriptions: {
+    create: jest.fn()
+  }
+}
 
 const mockUser = { id: 1, name: 'mock user', email: 'foo@bar.com' }
 const mockRoom = { id: 1, name: 'Sample Room', category: 'プログラミング', user_id: mockUser.id }
@@ -22,7 +28,8 @@ const comments = [
   { id: 2, sentence: 'second comment', user_name: 'bar', user_id: 2, created_at: '2021-09-10 13:18:57' },
   { id: 3, sentence: 'third comment', user_name: 'foo', user_id: 1, created_at: '2021-09-10 13:18:57' }
 ]
-const resp_200 = { data: { data: { room: mockRoom, comments: comments } }, status: 200 }
+const resp_200 = { data: { data: { room: mockRoom, comments: comments } },status: 200 }
+const resp_403 = { response: { data: { error: '403' }, status: 403 }}
 const resp_404 = { response: { data: { error: '404' }, status: 404 }}
 const resp_500 = { response: { data: { msg: '500' }, status: 500 } }
 
@@ -60,10 +67,10 @@ describe('ShowRoom.vue', () => {
       it('returns true when current user is room owner', () => {
         store.dispatch('setCurrentUser', mockUser)
         axios.get.mockResolvedValueOnce(resp_200)
-        const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+        const wrapper = shallowMount(ShowRoom, { router, store, localVue, mocks: { $cable }})
         setTimeout(() => {
           expect(wrapper.vm.isOwner).toBeTruthy()
-        }, 1);
+        }, 1)
       })
 
       it('returns false when current user is not room owner', () => {
@@ -72,7 +79,7 @@ describe('ShowRoom.vue', () => {
         const wrapper = shallowMount(ShowRoom, { router, store, localVue })
         setTimeout(() => {
           expect(wrapper.vm.isOwner).toBeFalsey()
-        }, 1);
+        }, 1)
       })
     })
   })
@@ -103,7 +110,7 @@ describe('ShowRoom.vue', () => {
           const wrapper = shallowMount(ShowRoom, { router, store, localVue })
           setTimeout(() => {
             expect(wrapper.vm.$route.path).toBe('/')
-          }, 1);
+          }, 1)
         })
       })
 
@@ -122,6 +129,88 @@ describe('ShowRoom.vue', () => {
           setTimeout(() => {
             expect(wrapper.vm.$route.path).toBe('/')
           }, 1)
+        })
+      })
+    })
+
+    describe('destroyRoom', () => {
+      beforeEach(() => {
+        global.confirm = jest.fn(() => true)
+      })
+
+      describe('when status is 200', () => {
+        it('sets flash', async () => {
+          axios.delete.mockResolvedValueOnce(resp_200)
+          const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+          await wrapper.vm.destroyRoom()
+          expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'ルームを削除しました', type: 'success' })
+        })
+
+        it('push home page', async () => {
+          axios.delete.mockResolvedValueOnce(resp_200)
+          const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+          wrapper.vm.destroyRoom()
+          await nextTick()
+          expect(wrapper.vm.$route.path).toBe('/')
+        })
+      })
+
+      describe('when status is 403', () => {
+        it('sets flash', async () => {
+          axios.delete.mockRejectedValueOnce(resp_403)
+          const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+          await wrapper.vm.destroyRoom()
+          expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'この操作は禁止されています', type: 'error' })
+        })
+      })
+
+      describe('when status is 404', () => {
+        it('sets flash', async () => {
+          axios.delete.mockRejectedValueOnce(resp_404)
+          const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+          await wrapper.vm.destroyRoom()
+          expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'ルームを見つけることができませんでした', type: 'error' })
+        })
+      })
+
+      describe('when status is 500', () => {
+        it('sets flash', async () => {
+          axios.delete.mockRejectedValueOnce(resp_500)
+          const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+          await wrapper.vm.destroyRoom()
+          expect(wrapper.vm.$store.state.flash).toEqual({ msg: '未知のエラー', type: 'error' })
+        })
+      })
+    })
+
+    describe('keyDownEnter', () => {
+      it('sets keyCode', async () => {
+        const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+        wrapper.vm.keyDownEnter(new Event('keydown', { key: 'enter' }))
+        setTimeout(() => {
+          expect(wrapper.vm.$data.keyDownCode).toBe(13)
+        }, 1)
+      })
+    })
+
+    describe('createComment', () => {
+      // ログイン時のテスト。。。
+
+      describe('when user is not logged in', () => {
+        it('sets flash', async () => {
+          await store.dispatch('setCurrentUser', null)
+          const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+          wrapper.vm.createComment({ target: { value: 'foo' }})
+          setTimeout(() => {
+            expect(wrapper.vm.$store.flash).toEqual({ msg: 'コメントするにはログインしてください', type: 'warning' })
+          }, 1)
+        })
+
+        it('push home page', async () => {
+          const wrapper = shallowMount(ShowRoom, { router, store, localVue })
+          wrapper.vm.createComment({ target: { value: 'foo' }})
+          await nextTick()
+          expect(wrapper.vm.$route.path).toBe('/login')
         })
       })
     })
