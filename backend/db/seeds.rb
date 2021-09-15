@@ -1,7 +1,97 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
-#
-# Examples:
-#
-#   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
-#   Character.create(name: 'Luke', movie: movies.first)
+include RoomsHelper
+
+foo = User.create!({
+  name: 'foo',
+  email: 'foo@bar.com',
+  password: 'password',
+  password_confirmation: 'password',
+  avatar: File.open("#{Rails.root}/spec/files/profile.jpg")
+})
+
+tom = User.create!({
+  name: 'tom',
+  email: 'tom@example.com',
+  password: 'password',
+  password_confirmation: 'password',
+  avatar: File.open("#{Rails.root}/spec/files/dog.jpg")
+})
+
+taro = User.create!({
+  name: 'taro',
+  email: 'taro@example.com',
+  password: 'password',
+  password_confirmation: 'password',
+  avatar: File.open("#{Rails.root}/spec/files/cat.jpg")
+})
+
+pien = User.create!({
+  name: 'pien',
+  email: 'pien@example.com',
+  password: 'passsword',
+  password_confirmation: 'passsword',
+  avatar: File.open("#{Rails.root}/spec/files/pien.png")
+})
+
+bar = User.create!({
+  name: 'bar',
+  email: 'bar@example.com',
+  password: 'password',
+  password_confirmation: 'password'
+})
+
+room1 = Room.create!({
+  name: 'きのこかたけのこか',
+  category: 'その他',
+  user: foo
+})
+
+room2 = Room.create!({
+  name: 'Example room',
+  category: 'プログラミング',
+  user: tom
+})
+
+room3 = Room.create!({
+  name: 'コロナいつ終わるの？',
+  category: 'その他',
+  user: taro
+})
+
+Room.create!({
+  name: 'ぴえんぴえんぴえんぴえんぴえん',
+  category: 'その他',
+  user: pien
+})
+
+100.times do |n|
+  User.create!({
+    name: Faker::FunnyName.name,
+    email: "example-#{n}@example.com",
+    password: 'password',
+    password_confirmation: 'password'
+  })
+end
+
+300.times do
+  Room.create!({
+    name: Faker::Mountain.name,
+    category: CATEGORIES.sample,
+    user: [foo, tom, taro, pien, bar].sample
+  })
+end
+
+100.times do
+  Comment.create!({
+    sentence: Faker::Lorem.paragraph,
+    user: [foo, tom, taro, pien, bar].sample,
+    room: room1
+  })
+end
+
+100.times do
+  Comment.create!({
+    sentence: Faker::Lorem.paragraph,
+    user: [foo, tom, taro, pien, bar].sample,
+    room: room2
+  })
+end

@@ -3,6 +3,7 @@
     <v-tabs-slider style="opacity:0"></v-tabs-slider>
 
     <v-tab :to="{ name: 'User', params: { id: user.id }}">アカウント</v-tab>
+    <v-tab to="/rooms/new">ルーム作成</v-tab>
     <v-tab @click="logout">ログアウト</v-tab>
   </v-tabs>
 </template>

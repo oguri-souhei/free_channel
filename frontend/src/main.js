@@ -6,8 +6,12 @@ import axios from 'axios'
 import axiosUtils from './plugins/axios'
 import { getCurrentUser } from './modules/users'
 import vuetify from './plugins/vuetify'
+import actioncable from 'actioncable'
 
 Vue.config.productionTip = false
+
+const cable = actioncable.createConsumer('http://localhost:3000/cable')
+Vue.prototype.$cable = cable
 
 Vue.use(axiosUtils, { axios });
 

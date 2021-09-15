@@ -1,10 +1,20 @@
 Rails.application.routes.draw do
+  mount ActionCable.server => '/cable'
   devise_for :users, skip: %i(sessions passwords registrations)
 
   namespace :api do
     namespace :v1 do
-      resources :users, only: :show
       get '/login_user', to: 'users#login_user', as: :login_user
+
+      scope :rooms do
+        get '/search', to: 'rooms#search', as: :rooms_search
+      end
+
+      resources :users, only: :show
+
+      resources :rooms, only: [:show, :create, :update, :destroy] do
+        resources :comments, only: [:create, :destroy], shallow: true
+      end
 
       namespace :auth do
         post '/sign_up', to: 'registrations#create', as: :sign_up
