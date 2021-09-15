@@ -156,8 +156,6 @@ export default {
         this.perform('comment', { comment })
       }
     })
-
-    console.log(this.roomChannel)
   }
 }
 </script>
