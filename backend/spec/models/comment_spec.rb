@@ -9,6 +9,7 @@ RSpec.describe Comment, type: :model do
   describe 'Association' do
     it { should belong_to(:user) }
     it { should belong_to(:room) }
+    it { should have_many :favorites }
 
     it 'is dependent destroy user' do
       tom_comment

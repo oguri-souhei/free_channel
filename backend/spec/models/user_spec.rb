@@ -6,6 +6,8 @@ RSpec.describe User, type: :model do
 
   describe 'Association' do
     it { should have_many :rooms }
+    it { should have_many :comments }
+    it { should have_many :favorites }
   end
 
   describe 'Validation' do
