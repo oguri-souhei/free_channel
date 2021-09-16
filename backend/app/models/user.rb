@@ -25,4 +25,9 @@ class User < ApplicationRecord
 
     update(user_params)
   end
+
+  # コメントをお気に入りする
+  def favorite(comment)
+    favorites.create(comment: comment)
+  end
 end

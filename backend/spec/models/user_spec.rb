@@ -3,6 +3,7 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   let(:user) { build(:user) }
   let(:tom) { create(:tom) }
+  let(:comment) { create(:comment) }
 
   describe 'Association' do
     it { should have_many :rooms }
@@ -216,6 +217,14 @@ RSpec.describe User, type: :model do
           tom.reload
           expect(wrong_params[:password]).to_not be_valid_password_of(tom)
         end
+      end
+    end
+
+    context '#favorite' do
+      it 'creates a new record' do
+        expect {
+          tom.favorite(comment)
+        }.to change(Favorite, :count).by(1)
       end
     end
   end
