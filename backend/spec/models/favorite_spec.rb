@@ -56,6 +56,13 @@ RSpec.describe Favorite, type: :model do
         favorite.valid?
         expect(favorite.errors[:comment_id]).to include 'は整数で入力してください'
       end
+
+      it 'is invalid when duplicated record is exist' do
+        tom_favorite
+        fav = build(:favorite, user: tom, comment: comment)
+        fav.valid?
+        expect(fav.errors[:comment_id]).to include 'は既に使用されています'
+      end
     end
   end
 end
