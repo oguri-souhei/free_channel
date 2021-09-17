@@ -9,6 +9,16 @@ RSpec.describe User, type: :model do
     it { should have_many :rooms }
     it { should have_many :comments }
     it { should have_many :favorites }
+
+    it 'has many favorite_comments' do
+      favorites = create_list(:favorite, 3, user: tom)
+      aggregate_failures do
+        expect(tom.favorite_comments.length).to eq 3
+        expect(tom.favorite_comments[0]).to eq favorites[0].comment
+        expect(tom.favorite_comments[1]).to eq favorites[1].comment
+        expect(tom.favorite_comments[2]).to eq favorites[2].comment
+      end
+    end
   end
 
   describe 'Validation' do
@@ -225,6 +235,36 @@ RSpec.describe User, type: :model do
         expect {
           tom.favorite(comment)
         }.to change(Favorite, :count).by(1)
+      end
+    end
+
+    context '#unfavorite' do
+      # 指定したコメントのいいねが削除されているか？
+      it 'unfavorite the comment' do
+        tom.favorite(comment)
+        aggregate_failures do
+          expect(tom.favorited?(comment)).to be_truthy
+          tom.unfavorite(comment)
+          expect(tom.favorited?(comment)).to be_falsey
+        end
+      end
+
+      it 'destroy a favorite record' do
+        tom.favorite(comment)
+        expect {
+          tom.unfavorite(comment)
+        }.to change(Favorite, :count).by(-1)
+      end
+    end
+
+    context '#favorited?' do
+      it 'returns true when the comment is favorited' do
+        tom.favorite(comment)
+        expect(tom.favorited?(comment)).to be_truthy
+      end
+
+      it 'returns false when the comment is not favorited' do
+        expect(tom.favorited?(comment)).to be_falsey
       end
     end
   end
