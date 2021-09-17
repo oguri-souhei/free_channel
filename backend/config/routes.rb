@@ -13,7 +13,10 @@ Rails.application.routes.draw do
       resources :users, only: :show
 
       resources :rooms, only: [:show, :create, :update, :destroy] do
-        resources :comments, only: [:create, :destroy], shallow: true
+        resources :comments, only: [:create, :destroy], shallow: true do
+          resources :favorites, only: [:index, :create], shallow: true
+          resource :favorite, only: :destroy
+        end
       end
 
       namespace :auth do

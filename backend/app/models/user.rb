@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   has_many :rooms, dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :favorites, dependent: :destroy
+  has_many :favorite_comments, through: :favorites, source: :comment
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
@@ -23,5 +25,20 @@ class User < ApplicationRecord
     clean_up_passwords
 
     update(user_params)
+  end
+
+  # コメントをいいねする
+  def favorite(comment)
+    favorites.create(comment: comment)
+  end
+
+  # いいねをはずす
+  def unfavorite(comment)
+    favorites.find_by(comment: comment) &. destroy
+  end
+
+  # このコメントはいいね済みか？
+  def favorited?(comment)
+    favorite_comments.include?(comment)
   end
 end

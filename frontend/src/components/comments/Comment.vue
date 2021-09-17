@@ -10,7 +10,11 @@
       <p class="sentence">{{ sentence }}</p>
       <div class="comment-info">
         <span class="created-date">{{ createdDate }}</span>
-        <span>0 いいね</span>
+        <div class="favorite">
+          <v-icon v-show="!flag" @click="favorite" color="red" dense>mdi-heart-outline</v-icon>
+          <v-icon v-show="flag" @click="unfavorite" color="red" dense>mdi-heart</v-icon>
+          <span>{{ count }}</span>
+        </div>
       </div>
     </div>
   </div>
@@ -25,6 +29,10 @@ export default {
     Avatar
   },
   props: {
+    id: {
+      type: Number,
+      required: true
+    },
     sentence: {
       type: String,
       required: true
@@ -43,12 +51,42 @@ export default {
     userId: {
       type: Number,
       required: true
+    },
+    isFavorited: {
+      type: Boolean,
+      default: false
+    },
+    favoriteCount: {
+      type: Number,
+      default: 0
+    }
+  },
+  data() {
+    return {
+      flag: false,
+      count: 0
     }
   },
   computed: {
     createdDate() {
       return dateTime(this.createdAt)
     }
+  },
+  methods: {
+    favorite() {
+      this.$http.post('/api/v1/comments/' + this.id + '/favorites')
+      this.count++
+      this.flag = true
+    },
+    unfavorite() {
+      this.$http.delete('/api/v1/comments/' + this.id + '/favorite')
+      this.count--
+      this.flag = false
+    }
+  },
+  created() {
+    this.flag = this.isFavorited
+    this.count = this.favoriteCount
   }
 }
 </script>
@@ -79,6 +117,11 @@ p {
 
 .comment-info {
   position: absolute;
-  bottom: 0; 
+  bottom: 0;
+  display: flex;
+}
+
+.favorite {
+  margin-left: 10px;
 }
 </style>

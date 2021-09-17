@@ -9,6 +9,7 @@ RSpec.describe Comment, type: :model do
   describe 'Association' do
     it { should belong_to(:user) }
     it { should belong_to(:room) }
+    it { should have_many :favorites }
 
     it 'is dependent destroy user' do
       tom_comment
@@ -74,6 +75,15 @@ RSpec.describe Comment, type: :model do
           expect(tom_comment.data[:user_id]).to eq tom_comment.user_id
           expect(tom_comment.data[:user_name]).to eq tom_comment.user.name
           expect(tom_comment.data[:room_id]).to eq tom_comment.room_id
+        end
+      end
+
+      it 'returns data including favorited when argument' do
+        tom.favorite(tom_comment)
+        aggregate_failures do
+          expect(tom_comment.data(tom)[:favorited]).to be_truthy
+          tom.unfavorite(tom_comment)
+          expect(tom_comment.data(tom)[:favorited]).to be_falsey
         end
       end
     end
