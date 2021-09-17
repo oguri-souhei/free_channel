@@ -77,6 +77,15 @@ RSpec.describe Comment, type: :model do
           expect(tom_comment.data[:room_id]).to eq tom_comment.room_id
         end
       end
+
+      it 'returns data including favorited when argument' do
+        tom.favorite(tom_comment)
+        aggregate_failures do
+          expect(tom_comment.data(tom)[:favorited]).to be_truthy
+          tom.unfavorite(tom_comment)
+          expect(tom_comment.data(tom)[:favorited]).to be_falsey
+        end
+      end
     end
   end
 end
