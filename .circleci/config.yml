@@ -39,5 +39,4 @@ workflows:
     jobs:
       - build:
           context:
-            - build-env-vars
             - docker-hub-creds
