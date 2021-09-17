@@ -7,20 +7,15 @@ jobs:
   build:
     docker:
       - image: circleci/ruby:3.0.2-node
+      - image: circleci/mysql8.0
+        name: "db"
+        command: --default-authentication-plugin=mysql_native_password
+        environment:
+          MYSQL_ROOT_PASSWORD: password
     working_directory: ~/project/backend
     steps:
       - checkout
-      - run:
-          name: "bundle install"
-          command: "backend/bin/bundle install"
-      - run:
-          name: "waiting DB start"
-          command: dockerize -wait tcp://127.0.0.1:3306 -timeout 1m
-      - run:
-          name: "initialize DB"
-          command: |
-            bundle exec rake db:create
-            bundle exec rake db:migrate
+      - ruby/install-deps
 
 workflows:
   version: 2
