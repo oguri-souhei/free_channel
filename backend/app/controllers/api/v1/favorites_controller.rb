@@ -17,10 +17,10 @@ class Api::V1::FavoritesController < Api::V1::ApplicationController
     render json: {}, status: :ok
   end
 
-  # DELETE /api/v1/favorites/:id
+  # DELETE /api/v1/comments/:comment_id/favorite
   def destroy
-    favorite = Favorite.find(params[:id])
-    favorite.destroy
+    comment = Comment.find(params[:comment_id])
+    current_user.unfavorite(comment)
     render json: {}, status: :ok
   end
 end
