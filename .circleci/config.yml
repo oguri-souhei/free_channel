@@ -7,11 +7,6 @@ jobs:
   build:
     docker:
       - image: circleci/ruby:3.0.2-node
-      - image: circleci/mysql8.0
-        name: "db"
-        command: --default-authentication-plugin=mysql_native_password
-        environment:
-          MYSQL_ROOT_PASSWORD: password
     working_directory: ~/project/backend
     steps:
       - checkout
