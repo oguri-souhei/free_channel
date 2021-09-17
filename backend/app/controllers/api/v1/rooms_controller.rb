@@ -7,7 +7,7 @@ class Api::V1::RoomsController < Api::V1::ApplicationController
 
   # GET /api/v1/rooms/:id
   def show
-    comments = @room.comments.map(&:data)
+    comments = @room.comments.map { |comment| comment.data(current_user) }
     render json: { data: { room: @room, comments: comments } }, status: :ok
   end
 

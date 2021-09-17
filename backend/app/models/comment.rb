@@ -10,14 +10,15 @@ class Comment < ApplicationRecord
   def data(user = nil)
     favorited = user.favorited?(self) if user
     {
-      id:         self.id,
-      sentence:   self.sentence,
-      created_at: self.created_at,
-      avatar:     self.user.avatar,
-      user_id:    self.user_id,
-      user_name:  self.user.name,
-      room_id:    self.room.id,
-      favorited: favorited
+      id:             self.id,
+      sentence:       self.sentence,
+      created_at:     self.created_at,
+      avatar:         self.user.avatar,
+      user_id:        self.user_id,
+      user_name:      self.user.name,
+      room_id:        self.room.id,
+      favorited:      favorited,
+      favorite_count: self.favorites.count
     }
   end
 end
