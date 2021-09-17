@@ -4,67 +4,20 @@ orbs:
   ruby: circleci/ruby@1.1.2
   node: circleci/node@2
 
-# setup
-commands:
-  setup:
+jobs:
+  build:
+    docker:
+      - image: circleci/ruby:3.0.2-node
+    working_directory: ~/project/backend
     steps:
       - checkout
       - ruby/install-deps
       - node/install-packages:
           pkg-manager: yarn
-          cache-key: "yarn.lock"
-
-jobs:
-  working_directory: ~/backend
-  build:
-    docker:
-      - image: circleci/ruby:3.0.2-node
-    steps:
-      - setup
-  # rubocop:
-  #   docker:
-  #     - image: circleci/ruby:3.0.2-node
-  #   steps:
-  #     - setup
-  #     - run:
-  #         name: rubocop
-  #         command: bundle exec rubocop
-  # test:
-  #   docker:
-  #     - image: circleci/ruby:3.0.2-node
-  #     - image: circleci/mysql:8.0
-  #       name: "db"
-  #       command: --default-authentication-plugin=mysql_native_password
-  #       environment:
-  #         MYSQL_ROOT_PASSWORD: password
-  #     - image: selenium/standalone-chrome
-  #   environment:
-  #     BUNDLE_JOBS: "4"
-  #     BUNDLE_RETRY: "3"
-  #     RAILS_ENV: test
-  #   steps:
-  #     - setup
-  #     - run:
-  #         name: rails db:create
-  #         command: bundle exec rails db:create RAILS_ENV=test
-  #     - run:
-  #         name: rails db:migrate
-  #         command: bundle exec rails db:migrate
-  #     - run:
-  #         name: Database setup
-  #         command: bundle exec rails db:schema:load --trace
-  #     - run:
-  #         name: Rspec
-  #         command: bin/rspec
+          cache-key: yarn.lock
 
 workflows:
   version: 2
   build:
     jobs:
       - build
-      # - rubocop:
-      #     requires:
-      #       - build
-      # - test:
-      #     requires:
-      #       - build
