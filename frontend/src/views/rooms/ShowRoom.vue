@@ -26,11 +26,14 @@
     <div class="comments">
       <div v-for="(comment, index) in comments" :key="index" :class="'comment comment-' + index">
         <Comment
+          :id="comment.id"
           :sentence="comment.sentence"
           :createdAt="comment.created_at"
           :userName="comment.user_name"
           :avatar="comment.avatar"
           :userId="comment.user_id"
+          :isFavorited="comment.favorited"
+          :favoriteCount="comment.favorite_count"
         />
       </div>
     </div>
