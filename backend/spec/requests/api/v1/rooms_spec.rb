@@ -8,6 +8,31 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
   let(:invalid_room_params) { attributes_for(:room, name: ' ', category: ' ') }
   let(:new_room_params) { attributes_for(:new_room) }
 
+  describe 'GET /api/v1/rooms' do
+    before do
+      create_list(:room, 100)
+      get api_v1_rooms_path
+    end
+
+    it 'responds :ok' do
+      expect(response).to have_http_status :ok
+    end
+
+    it 'render json' do
+      expect(response).to have_content_type :json
+    end
+
+    it 'returns rooms data' do
+      data = JSON.parse(response.body)['data']
+      aggregate_failures do
+        expect(data.length).to eq 50
+        expect(data[0]['id']).to eq Room.first.id
+        expect(data[1]['id']).to eq Room.second.id
+        expect(data[2]['id']).to eq Room.third.id
+      end
+    end
+  end
+
   describe 'GET /api/v1/rooms/:id' do
     context 'when the room is found' do
       it 'responds :ok' do

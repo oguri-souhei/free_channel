@@ -5,6 +5,12 @@ class Api::V1::RoomsController < Api::V1::ApplicationController
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_status_404
 
+  # GET /api/v1/rooms
+  def index
+    rooms = Room.page(params[:page]).per(50)
+    render json: { data: rooms }, status: :ok
+  end
+
   # GET /api/v1/rooms/:id
   def show
     comments = @room.comments.map { |comment| comment.data(current_user) }

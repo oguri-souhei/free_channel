@@ -12,6 +12,7 @@ gem 'rack-cors'
 gem 'rails-i18n'
 gem 'carrierwave'
 gem 'faker'
+gem 'kaminari'
 
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
