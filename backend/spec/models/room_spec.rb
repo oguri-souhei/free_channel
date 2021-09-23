@@ -81,11 +81,14 @@ RSpec.describe Room, type: :model do
 
     context '#data' do
       it 'returns room data' do
+        comments = create_list(:comment, 7, room: tom_room)
         aggregate_failures do
           expect(tom_room.data[:id]).to eq tom_room.id
           expect(tom_room.data[:name]).to eq tom_room.name
           expect(tom_room.data[:created_at]).to eq tom_room.created_at
           expect(tom_room.data[:comment_count]).to eq tom_room.comments.count
+          expect(tom_room.data[:avatar]).to eq tom_room.user.avatar
+          expect(tom_room.data[:first_comment]).to eq comments.first.sentence
         end
       end
     end
