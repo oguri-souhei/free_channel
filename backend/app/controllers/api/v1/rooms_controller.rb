@@ -7,7 +7,7 @@ class Api::V1::RoomsController < Api::V1::ApplicationController
 
   # GET /api/v1/rooms
   def index
-    rooms = Room.page(params[:page]).per(50)
+    rooms = Room.page(params[:page]).per(50).map(&:data)
     render json: { data: rooms }, status: :ok
   end
 

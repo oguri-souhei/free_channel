@@ -64,6 +64,16 @@ const routes = [
       requiresAuth: null
     }
   },
+  // ルームの一覧ページ
+  {
+    path: '/rooms',
+    name: 'IndexRooms',
+    component: () => import('../views/rooms/IndexRoom.vue'),
+    meta: {
+      title: 'ルーム一覧 | ' + APP_NAME,
+      requiresAuth: null
+    }
+  },
   // ルーム作成ページ
   {
     path: '/rooms/new',
