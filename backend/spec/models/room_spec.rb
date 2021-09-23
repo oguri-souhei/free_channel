@@ -78,5 +78,16 @@ RSpec.describe Room, type: :model do
         end
       end
     end
+
+    context '#data' do
+      it 'returns room data' do
+        aggregate_failures do
+          expect(tom_room.data[:id]).to eq tom_room.id
+          expect(tom_room.data[:name]).to eq tom_room.name
+          expect(tom_room.data[:created_at]).to eq tom_room.created_at
+          expect(tom_room.data[:comment_count]).to eq tom_room.comments.count
+        end
+      end
+    end
   end
 end

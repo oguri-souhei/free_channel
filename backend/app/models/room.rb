@@ -15,4 +15,13 @@ class Room < ApplicationRecord
   def self.search_by_category(term, page = 1)
     Room.where(category: term)
   end
+
+  def data
+    {
+      id: id,
+      name: name,
+      created_at: created_at,
+      comment_count: self.comments.count
+    }
+  end
 end
