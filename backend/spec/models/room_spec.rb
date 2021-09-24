@@ -47,38 +47,19 @@ RSpec.describe Room, type: :model do
   end
 
   describe 'Methods' do
-    context '#search_by_name' do
-      before do
-        create(:room, name: 'foo')
-        create(:room, name: 'bar')
-        create(:room, name: 'foobar')
-      end
-
-      it 'searches rooms' do
-        rooms = Room.search_by_name('foo')
+    context '.search' do
+      it 'returns result' do
+        room_1 = create(:room, name: 'プログラミングするよ')
+        room_2 = create(:room, category: 'プログラミング')
+        room_3 = create(:room, category: 'その他')
+        result = Room.search('プログラミング')
         aggregate_failures do
-          expect(rooms.length).to eq 2
-          expect(rooms[0].name).to eq 'foo'
-          expect(rooms[1].name).to eq 'foobar'
+          expect(result).to include room_1
+          expect(result).to include room_2
+          expect(result).to_not include room_3
         end
       end
     end
-
-    context '#search_by_category' do
-      it 'searches rooms' do
-        create_list(:room, 11, category: 'プログラミング')
-        rooms_1 = Room.search_by_category('プログラミング')
-        aggregate_failures do
-          expect(rooms_1[0].name).to eq Room.first.name
-          expect(rooms_1[1].name).to eq Room.second.name
-        end
-        room_2 = Room.search_by_category('プログラミング', 2)
-        aggregate_failures do
-          expect(room_2[0].name).to eq Room.last.name
-        end
-      end
-    end
-
     context '#data' do
       it 'returns room data' do
         comments = create_list(:comment, 7, room: tom_room)

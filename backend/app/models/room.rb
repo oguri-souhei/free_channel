@@ -8,12 +8,9 @@ class Room < ApplicationRecord
   validates :user_id, presence: true, numericality: { only_integer: true }
   validates :category, presence: true, inclusion: { in: CATEGORIES }
 
-  def self.search_by_name(term)
-    Room.where('name LIKE ?', '%' + term + '%')
-  end
-
-  def self.search_by_category(term, page = 1)
-    Room.where(category: term)
+  # カテゴリーもしくは名前にマッチする検索結果を取得する
+  def self.search(term = '')
+    Room.where('category = ?', term).or(Room.where('name LIKE ?', "%#{term}%"))
   end
 
   def data
