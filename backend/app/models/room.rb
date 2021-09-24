@@ -20,10 +20,9 @@ class Room < ApplicationRecord
     {
       id: id,
       name: name,
+      category: category,
       created_at: created_at,
       comment_count: self.comments.count,
-      avatar: user.avatar,
-      first_comment: comments.first && comments.first.sentence
     }
   end
 end
