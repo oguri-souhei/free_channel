@@ -7,8 +7,10 @@ class Api::V1::RoomsController < Api::V1::ApplicationController
 
   # GET /api/v1/rooms
   def index
-    rooms = Room.page(params[:page]).per(50).map(&:data)
-    render json: { data: rooms }, status: :ok
+    size = 50
+    rooms = Room.page(params[:page]).per(size).map(&:data)
+    length = (Room.count.to_f / size).ceil
+    render json: { data: { rooms: rooms, length: length } }, status: :ok
   end
 
   # GET /api/v1/rooms/:id
@@ -42,18 +44,6 @@ class Api::V1::RoomsController < Api::V1::ApplicationController
     else
       render json: {}, status: :bad_request
     end
-  end
-
-  # GET /api/v1/rooms/search
-  def search
-    if params[:category]
-      rooms = Room.search_by_category(params[:category])
-    elsif params[:name]
-      rooms = Room.search_by_name(params[:name])
-    else
-      rooms = Room.all
-    end
-    render json: { data: rooms }, status: :ok
   end
 
   private

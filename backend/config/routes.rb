@@ -6,10 +6,6 @@ Rails.application.routes.draw do
     namespace :v1 do
       get '/login_user', to: 'users#login_user', as: :login_user
 
-      scope :rooms do
-        get '/search', to: 'rooms#search', as: :rooms_search
-      end
-
       resources :users, only: :show
 
       resources :rooms, only: [:index, :show, :create, :update, :destroy] do

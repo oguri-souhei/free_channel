@@ -10,7 +10,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
 
   describe 'GET /api/v1/rooms' do
     before do
-      create_list(:room, 100)
+      create_list(:room, 101)
       get api_v1_rooms_path
     end
 
@@ -25,10 +25,11 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
     it 'returns rooms data' do
       data = JSON.parse(response.body)['data']
       aggregate_failures do
-        expect(data.length).to eq 50
-        expect(data[0]['id']).to eq Room.first.id
-        expect(data[1]['id']).to eq Room.second.id
-        expect(data[2]['id']).to eq Room.third.id
+        expect(data['rooms'].length).to eq 50
+        expect(data['rooms'][0]['id']).to eq Room.first.id
+        expect(data['rooms'][1]['id']).to eq Room.second.id
+        expect(data['rooms'][2]['id']).to eq Room.third.id
+        expect(data['length']).to eq 3
       end
     end
   end
@@ -342,60 +343,6 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         expect {
           delete api_v1_room_path(room.id + 100)
         }.to_not change(Room, :count)
-      end
-    end
-  end
-
-  describe 'GET /api/v1/rooms/search' do
-    context 'when params[:name] is exist' do
-      before do
-        create(:room, name: 'foo')
-        create(:room, name: 'bar')
-        create(:room, name: 'foobar')
-        get api_v1_rooms_search_path, params: { name: 'foo' }
-      end
-
-      it 'responds :ok' do
-        expect(response).to have_http_status :ok
-      end
-
-      it 'render json' do
-        expect(response).to have_content_type :json
-      end
-
-      it 'render data' do
-        data = JSON.parse(response.body)['data']
-        aggregate_failures do
-          expect(data.length).to eq 2
-          expect(data[0]['name']).to eq 'foo'
-          expect(data[1]['name']).to eq 'foobar'
-        end
-      end
-    end
-
-    context 'when params[:category] is exist' do
-      before do
-        create(:room, name: 'foo', category: 'プログラミング')
-        create(:room, name: 'bar', category: 'その他')
-        create(:room, name: 'foobar', category: 'プログラミング')
-        get api_v1_rooms_search_path, params: { category: 'プログラミング' }
-      end
-
-      it 'responds :ok' do
-        expect(response).to have_http_status :ok
-      end
-
-      it 'render json' do
-        expect(response).to have_content_type :json
-      end
-
-      it 'render data' do
-        data = JSON.parse(response.body)['data']
-        aggregate_failures do
-          expect(data.length).to eq 2
-          expect(data[0]['name']).to eq 'foo'
-          expect(data[1]['name']).to eq 'foobar'
-        end
       end
     end
   end

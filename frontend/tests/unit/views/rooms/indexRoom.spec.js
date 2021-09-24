@@ -15,12 +15,13 @@ localVue.use(Vuex)
 
 jest.mock('axios')
 const rooms = [
-  { id: 1, name: 'Room1', created_at: '2021-09-17T09:46:02.431+09:00', comment_count: 10 },
-  { id: 10, name: 'Room10', created_at: '2021-09-17T09:46:02.431+09:00', comment_count: 100 },
-  { id: 102, name: 'Room102', created_at: '2021-09-17T09:46:02.431+09:00', comment_count: 12 }
+  { id: 1, name: 'Room1', category: 'プログラミング', created_at: '2021-09-17T09:46:02.431+09:00', comment_count: 10 },
+  { id: 10, name: 'Room10', category: 'その他', created_at: '2021-09-17T09:46:02.431+09:00', comment_count: 100 },
+  { id: 102, name: 'Room102', category: 'プログラミング', created_at: '2021-09-17T09:46:02.431+09:00', comment_count: 12 }
 ]
+const length = 1
 const resp_200 = { data: {
-  data: rooms
+  data: { rooms, length }
 }, status: 200 }
 const resp_500 = { response: { data: null, status: 500 } }
 

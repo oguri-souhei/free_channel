@@ -63,7 +63,7 @@ describe('Comment.vue', () => {
     describe('createdDate', () => {
       it('returns date', () => {
         const wrapper = shallowMount(Comment, { propsData, router, localVue })
-        expect(wrapper.vm.createdDate).toBe('2021 09/17')
+        expect(wrapper.vm.createdDate).toBe('2021年09月17日')
       })
     })
   })
