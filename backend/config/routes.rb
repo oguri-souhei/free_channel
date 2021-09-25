@@ -8,7 +8,11 @@ Rails.application.routes.draw do
 
       resources :users, only: :show
 
-      resources :rooms, only: [:index, :show, :create, :update, :destroy] do
+      scope :rooms do
+        get '/search', to: 'rooms#search', as: :rooms_search
+      end
+
+      resources :rooms do
         resources :comments, only: [:create, :destroy], shallow: true do
           resources :favorites, only: [:index, :create], shallow: true
           resource :favorite, only: :destroy
