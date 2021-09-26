@@ -6,6 +6,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
   describe 'GET /api/v1/users/:id' do
     context 'when user is found' do
       before do
+        @rooms = create_list(:room, 12, user: tom)
         get api_v1_user_path(tom)
       end
 
@@ -20,12 +21,15 @@ RSpec.describe 'Api::V1::Users', type: :request do
       it 'render user data' do
         data = JSON.parse(response.body)['data']
         aggregate_failures do
-          expect(data['id']).to eq tom.id
-          expect(data['name']).to eq tom.name
-          expect(data['email']).to eq tom.email
-          expect(data['password']).to be_blank
-          expect(data['password_confirmation']).to be_blank
-          expect(data['encrypted_password']).to be_blank
+          expect(data['user']['id']).to eq tom.id
+          expect(data['user']['name']).to eq tom.name
+          expect(data['user']['email']).to eq tom.email
+          expect(data['user']['password']).to be_blank
+          expect(data['user']['password_confirmation']).to be_blank
+          expect(data['user']['encrypted_password']).to be_blank
+          expect(data['rooms'].length).to eq 12
+          expect(data['rooms'][0]['id']).to eq @rooms[0].id
+          expect(data['rooms'][1]['id']).to eq @rooms[1].id
         end
       end
     end

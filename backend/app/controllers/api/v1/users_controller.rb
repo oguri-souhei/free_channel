@@ -4,7 +4,8 @@ class Api::V1::UsersController < Api::V1::ApplicationController
   # GET /api/v1/users/:id
   def show
     user = User.find(params[:id])
-    render json: { data: user }, status: :ok
+    rooms = user.rooms
+    render json: { data: { user: user, rooms: rooms } }, status: :ok
   end
 
   # GET /api/v1/login_user
