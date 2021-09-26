@@ -348,26 +348,53 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
   end
 
   describe 'GET /api/v1/rooms/search' do
-    before do
-      @rooms = create_list(:room, 101)
-      get api_v1_rooms_search_path, params: { term: 'プログラミング' }
+    context 'when query is not blank' do
+      before do
+        @rooms = create_list(:room, 101)
+        get api_v1_rooms_search_path, params: { q: 'プログラミング' }
+      end
+
+      it 'responds :ok' do
+        expect(response).to have_http_status :ok
+      end
+
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders data' do
+        data = JSON.parse(response.body)['data']
+        aggregate_failures do
+          expect(data['rooms'][0]['id']).to eq @rooms.first.id
+          expect(data['rooms'][1]['id']).to eq @rooms.second.id
+          expect(data['rooms'][2]['id']).to eq @rooms.third.id
+          expect(data['length']).to eq 3
+        end
+      end
     end
 
-    it 'responds :ok' do
-      expect(response).to have_http_status :ok
-    end
+    context 'when query is blank' do
+      before do
+        @rooms = create_list(:room, 101)
+        get api_v1_rooms_search_path, params: { q: '' }
+      end
 
-    it 'renders json' do
-      expect(response).to have_content_type :json
-    end
+      it 'responds :ok' do
+        expect(response).to have_http_status :ok
+      end
 
-    it 'renders data' do
-      data = JSON.parse(response.body)['data']
-      aggregate_failures do
-        expect(data['rooms'][0]['id']).to eq @rooms.first.id
-        expect(data['rooms'][1]['id']).to eq @rooms.second.id
-        expect(data['rooms'][2]['id']).to eq @rooms.third.id
-        expect(data['length']).to eq 3
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'renders data' do
+        data = JSON.parse(response.body)['data']
+        aggregate_failures do
+          expect(data['rooms'][0]['id']).to eq @rooms.first.id
+          expect(data['rooms'][1]['id']).to eq @rooms.second.id
+          expect(data['rooms'][2]['id']).to eq @rooms.third.id
+          expect(data['length']).to eq 3
+        end
       end
     end
   end

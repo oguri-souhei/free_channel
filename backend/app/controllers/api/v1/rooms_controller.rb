@@ -49,9 +49,15 @@ class Api::V1::RoomsController < Api::V1::ApplicationController
   # GET /api/v1/rooms/search
   def search
     size = 50
-    q = params[:q]
-    rooms = Room.search(q).page(params[:page]).per(size)
-    length = (Room.count.to_f / size).ceil
+    if params[:q].blank?
+      rooms = Room.page(params[:page]).per(size).map(&:data)
+      length = (Room.count.to_f / size).ceil
+    else
+      results = Room.search(params[:q])
+      rooms = results.page(params[:page]).per(size).map(&:data)
+      length = (results.count.to_f / size).ceil
+    end
+
     render json: { data: { rooms: rooms, length: length } }, status: :ok
   end
 
