@@ -26,6 +26,7 @@
         <ValidationProvider v-slot="{ errors }" name="パスワード" rules="required|min:6">
           <v-text-field
             v-model="user.password"
+            type="password"
             id="password"
             label="パスワード"
             :error-messages="errors"

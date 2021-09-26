@@ -50,6 +50,7 @@
         <ValidationProvider v-slot="{ errors }" name="パスワード" rules="required|min:6">
           <v-text-field
             v-model="user.password"
+            type="password"
             id="password"
             label="パスワード"
             :error-messages="errors"
@@ -60,6 +61,7 @@
         <ValidationProvider v-slot="{ errors }" name="パスワード（確認用）" rules="required|confirmed:パスワード">
           <v-text-field
             v-model="user.password_confirmation"
+            type="password"
             id="password_confirmation"
             label="パスワード（確認用）"
             :error-messages="errors"
