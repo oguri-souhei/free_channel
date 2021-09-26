@@ -16,34 +16,28 @@
         </router-link>
       </div>
     </div>
-    <!-- ユーザーが作成したルーム一覧 -->
-    <!-- <div class="rooms">
-      <div v-for="(room, index) in rooms" :key="index" class="room">
-        <Room
-          :userId="room.user_id"
-          :roomId="room.id"
-          :name="room.name"
-          :category="room.category"
-          :created_at="room.created_at"
-          :profileImage="user.profile_image"
-        ></Room>
-      </div>
-    </div> -->
+    <div class="user-rooms">
+      <h3>作成したルーム</h3>
+      <Rooms :rooms="rooms"></Rooms>
+    </div>
   </div>
 </template>
 
 <script>
 import Avatar from '@/components/users/Avatar.vue'
+import Rooms from '@/components/rooms/Rooms.vue'
 import { getUser } from '@/modules/users'
 
 export default {
   name: 'User',
   components: {
-    Avatar
+    Avatar,
+    Rooms
   },
   data() {
     return {
-      user: {}
+      user: {},
+      rooms: []
     }
   },
   computed: {
@@ -61,7 +55,8 @@ export default {
       const response = await getUser(id).catch(res => res)
 
       if (response.status === 200) {
-        this.user = response.data.data
+        this.user = response.data.data.user
+        this.rooms = response.data.data.rooms
       }
 
       // ユーザーが見つからなかった
@@ -80,11 +75,11 @@ export default {
   async created() {
     await this.setUser(this.$route.params.id)
   },
-  // watch: {
-  //   '$route': async function (to) {
-  //     await this.setUser(to.params.id)
-  //   }
-  // }
+  watch: {
+    '$route': async function (to) {
+      await this.setUser(to.params.id)
+    }
+  }
 }
 </script>
 
@@ -118,5 +113,14 @@ export default {
 .edit-button {
   display: flex;
   justify-content: flex-end;
+}
+
+.user-rooms {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.user-rooms > h3 {
+  margin-top: 20px;
 }
 </style>
