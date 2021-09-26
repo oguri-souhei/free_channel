@@ -12,14 +12,22 @@
             </v-btn>
           </template>
 
-          <v-list>
-            <v-list-item>
-              <v-list-item-title>
-                <router-link to="/rooms/edit">編集</router-link>
-              </v-list-item-title>
-              <v-list-item-title @click="destroyRoom">ルーム削除</v-list-item-title>
-            </v-list-item>
-          </v-list>
+          <v-card tile>
+            <v-list dense>
+              <v-list-item-group color="primary">
+                <v-list-item>
+                  <v-list-item-content>
+                    <router-link to="/rooms/edit">編集</router-link>
+                  </v-list-item-content>
+                </v-list-item>
+                <v-list-item>
+                  <v-list-item-content>
+                    <span>削除</span>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list-item-group>
+            </v-list>
+          </v-card>
         </v-menu>
       </div>
     </div>
@@ -166,6 +174,11 @@ export default {
 <style scoped>
 h2 {
   margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: #333;
 }
 
 .show-room {
