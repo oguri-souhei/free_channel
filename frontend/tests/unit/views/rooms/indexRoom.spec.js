@@ -63,5 +63,15 @@ describe('IndexRoom.vue', () => {
         })
       })
     })
+
+    describe('#keyDownEnter', () => {
+      it('sets keyDownCode', () => {
+        const wrapper = shallowMount(IndexRoom, { router, store, localVue })
+        wrapper.vm.keyDownEnter(new Event('keydown', { key: 'enter' }))
+        setTimeout(() => {
+          expect(wrapper.vm.$data.keyDownCode).toBe(13)
+        }, 1)
+      })
+    })
   })
 })

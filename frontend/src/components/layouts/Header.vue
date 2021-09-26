@@ -11,9 +11,9 @@
 
         <v-spacer></v-spacer>
 
-        <v-btn icon>
+        <router-link to="/rooms">
           <v-icon>mdi-magnify</v-icon>
-        </v-btn>
+        </router-link>
 
         <v-btn icon>
           <v-icon>mdi-dots-vertical</v-icon>
@@ -54,6 +54,10 @@ export default {
 </script>
 
 <style scoped>
+a {
+  text-decoration: none;
+}
+
 .title {
   text-decoration: none;
   color: #000;
