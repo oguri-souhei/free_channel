@@ -84,6 +84,16 @@ const routes = [
       requiresAuth: true
     }
   },
+  // ルームの編集ページ
+  {
+    path: '/rooms/:id/edit',
+    name: 'EditRoom',
+    component: () => import('../views/rooms/EditRoom.vue'),
+    meta: {
+      title: 'ルーム編集 | ' + APP_NAME,
+      requiresAuth: true
+    }
+  },
   // ルーム個別ページ
   {
     path: '/rooms/:id',

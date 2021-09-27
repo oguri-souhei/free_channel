@@ -17,7 +17,7 @@
               <v-list-item-group color="primary">
                 <v-list-item>
                   <v-list-item-content>
-                    <router-link to="/rooms/edit">編集</router-link>
+                    <router-link :to="{ name: 'EditRoom', params: { id: room.id }}">編集</router-link>
                   </v-list-item-content>
                 </v-list-item>
                 <v-list-item>
