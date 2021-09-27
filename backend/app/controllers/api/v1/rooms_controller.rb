@@ -1,6 +1,6 @@
 class Api::V1::RoomsController < Api::V1::ApplicationController
   before_action :require_authentication, only: [:create, :update, :destroy]
-  before_action :set_room, only: [:show, :create, :update, :destroy]
+  before_action :set_room, only: [:show, :create, :update, :destroy, :info]
   before_action :correct_user?, only: [:update]
 
   rescue_from ActiveRecord::RecordNotFound, with: :render_status_404
@@ -61,6 +61,11 @@ class Api::V1::RoomsController < Api::V1::ApplicationController
     render json: { data: { rooms: rooms, length: length } }, status: :ok
   end
 
+  # GET /api/v1/rooms/:room_id/info
+  def info
+    render json: { data: @room }, status: :ok
+  end
+
   private
 
   def room_params
@@ -68,8 +73,13 @@ class Api::V1::RoomsController < Api::V1::ApplicationController
   end
 
   def set_room
-    @room = action_name == 'create' ?
-      current_user.rooms.build(room_params) : Room.find(params[:id])
+    if action_name == 'create'
+      @room = current_user.rooms.build(room_params)
+    elsif action_name == 'info'
+      @room = Room.find(params[:room_id])
+    else
+      @room = Room.find(params[:id])
+    end
   end
 
   def correct_user?

@@ -398,4 +398,29 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
       end
     end
   end
+
+  describe 'GET /api/v1/rooms/:room_id/info' do
+    context 'when room is exist' do
+      before do
+        get api_v1_room_info_path(room)
+      end
+
+      it 'responds :ok' do
+        expect(response).to have_http_status :ok
+      end
+
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+
+      it 'has room data' do
+        data = JSON.parse(response.body)['data']
+        aggregate_failures do
+          expect(data['id']).to eq room.id
+          expect(data['name']).to eq room.name
+          expect(data['category']).to eq room.category
+        end
+      end
+    end
+  end
 end

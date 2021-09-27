@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       end
 
       resources :rooms do
+        get '/info', to: 'rooms#info'
+
         resources :comments, only: [:create, :destroy], shallow: true do
           resources :favorites, only: [:index, :create], shallow: true
           resource :favorite, only: :destroy
