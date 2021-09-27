@@ -422,5 +422,19 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         end
       end
     end
+
+    context 'when room is not exist' do
+      before do
+        get api_v1_room_info_path(room.id + 100)
+      end
+
+      it 'responds :not_found' do
+        expect(response).to have_http_status :not_found
+      end
+
+      it 'renders json' do
+        expect(response).to have_content_type :json
+      end
+    end
   end
 end
