@@ -72,5 +72,26 @@ RSpec.describe Room, type: :model do
         end
       end
     end
+
+    context '#sort_by_comments_size' do
+      let(:most_commented_room) { create(:room) }
+      let(:commented_room) { create(:room) }
+      let(:least_commented_room) { create(:room) }
+
+      before do
+        create_list(:comment, 5, room: commented_room)
+        create_list(:comment, 1, room: least_commented_room)
+        create_list(:comment, 10, room: most_commented_room)
+      end
+
+      it 'sorts rooms by comments count' do
+        rooms = Room.sort_by_comments_size
+        aggregate_failures do
+          expect(rooms[0]).to eq most_commented_room
+          expect(rooms[1]).to eq commented_room
+          expect(rooms[2]).to eq least_commented_room
+        end
+      end
+    end
   end
 end

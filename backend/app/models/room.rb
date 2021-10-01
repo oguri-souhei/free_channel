@@ -22,4 +22,10 @@ class Room < ApplicationRecord
       comment_count: self.comments.count,
     }
   end
+
+  def self.sort_by_comments_size
+    Room.eager_load(:comments).sort do |a, b|
+      b.comments.size <=> a.comments.size
+    end
+  end
 end
