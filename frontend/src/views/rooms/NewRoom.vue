@@ -1,7 +1,7 @@
 <template>
   <div class="new_room">
 
-    <h2>ルーム作成</h2>
+    <h2>部屋作成</h2>
 
     <ValidationObserver ref="observer" v-slot="{ invalid }">
       <v-form ref="form" lazy-validation>
@@ -13,12 +13,12 @@
           </ul>
         </div>
 
-        <ValidationProvider v-slot="{ errors }" name="ルーム名" rules="required|max:300">
+        <ValidationProvider v-slot="{ errors }" name="部屋名" rules="required|max:300">
           <v-text-field
             v-model="room.name"
             id="name"
             :counter="300"
-            label="ルーム名"
+            label="部屋名"
             :error-messages="errors"
             required
           ></v-text-field>
@@ -82,7 +82,7 @@ export default {
       // 成功時
       if (response.status === 200) {
         const room = response.data.data
-        this.$store.dispatch('setFlash', { msg: 'ルームを作成しました', type: 'success' })
+        this.$store.dispatch('setFlash', { msg: '部屋を作成しました', type: 'success' })
         this.$router.push({ name: 'ShowRoom', params: { id: room.id }}).catch(() => null)
       }
 

@@ -55,7 +55,7 @@ describe('EditRoom.vue', () => {
           const wrapper = shallowMount(EditRoom, { router, store, localVue })
           axios.patch.mockResolvedValueOnce(resp_200)
           await wrapper.vm.updateRoom()
-          expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'ルームを編集しました', type: 'success' })
+          expect(wrapper.vm.$store.state.flash).toEqual({ msg: '部屋を編集しました', type: 'success' })
         })
 
         it('push ShowRoom page', async () => {

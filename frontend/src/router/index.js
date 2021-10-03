@@ -64,43 +64,43 @@ const routes = [
       requiresAuth: null
     }
   },
-  // ルームの一覧ページ
+  // 部屋の一覧ページ
   {
     path: '/rooms',
     name: 'IndexRooms',
     component: () => import('../views/rooms/IndexRoom.vue'),
     meta: {
-      title: 'ルーム一覧 | ' + APP_NAME,
+      title: '部屋一覧 | ' + APP_NAME,
       requiresAuth: null
     }
   },
-  // ルーム作成ページ
+  // 部屋作成ページ
   {
     path: '/rooms/new',
     name: 'NewRoom',
     component: () => import('../views/rooms/NewRoom.vue'),
     meta: {
-      title: 'ルーム作成 | ' + APP_NAME,
+      title: '部屋作成 | ' + APP_NAME,
       requiresAuth: true
     }
   },
-  // ルームの編集ページ
+  // 部屋の編集ページ
   {
     path: '/rooms/:id/edit',
     name: 'EditRoom',
     component: () => import('../views/rooms/EditRoom.vue'),
     meta: {
-      title: 'ルーム編集 | ' + APP_NAME,
+      title: '部屋編集 | ' + APP_NAME,
       requiresAuth: true
     }
   },
-  // ルーム個別ページ
+  // 部屋個別ページ
   {
     path: '/rooms/:id',
     name: 'ShowRoom',
     component: () => import('../views/rooms/ShowRoom.vue'),
     meta: {
-      title: 'ルーム | ' + APP_NAME,
+      title: '部屋 | ' + APP_NAME,
       requiresAuth: null
     }
   }

@@ -1,7 +1,7 @@
 <template>
   <div class="edit-room">
 
-    <h2>ルーム編集</h2>
+    <h2>部屋編集</h2>
 
     <ValidationObserver ref="observer" v-slot="{ invalid }">
       <v-form ref="form" lazy-validation>
@@ -13,12 +13,12 @@
           </ul>
         </div>
 
-        <ValidationProvider v-slot="{ errors }" name="ルーム名" rules="required|max:300">
+        <ValidationProvider v-slot="{ errors }" name="部屋名" rules="required|max:300">
           <v-text-field
             v-model="room.name"
             id="name"
             :counter="300"
-            label="ルーム名"
+            label="部屋名"
             :error-messages="errors"
             required
           ></v-text-field>
@@ -82,7 +82,7 @@ export default {
 
       // 成功時
       if (response.status === 200) {
-        this.$store.dispatch('setFlash', { msg: 'ルームを編集しました', type: 'success' })
+        this.$store.dispatch('setFlash', { msg: '部屋を編集しました', type: 'success' })
         this.$router.push({ name: 'ShowRoom', params: { id: this.room.id }})
       }
 
@@ -97,7 +97,7 @@ export default {
         this.$router.push({ path: '/login', query: { path: this.$route.fullPath }})
       }
 
-      // ルームの作成者ではない
+      // 部屋の作成者ではない
       else if (response.status === 403) {
         this.$store.dispatch('setFlash', { msg: 'この操作は禁止されています', type: 'error' })
         this.$router.push({ name: 'ShowRoom', params: { id: this.room.id }}).catch(() => null)

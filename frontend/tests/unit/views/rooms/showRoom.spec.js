@@ -101,7 +101,7 @@ describe('ShowRoom.vue', () => {
           axios.get.mockRejectedValueOnce(resp_404)
           const wrapper = shallowMount(ShowRoom, { router, store, localVue })
           setTimeout(() => {
-            expect(wrapper.vm.$store.flash).toEqual({ msg: 'ルームが見つかりませんでした', type: 'error'})
+            expect(wrapper.vm.$store.flash).toEqual({ msg: '部屋が見つかりませんでした', type: 'error'})
           }, 1)
         })
 
@@ -143,7 +143,7 @@ describe('ShowRoom.vue', () => {
           axios.delete.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(ShowRoom, { router, store, localVue })
           await wrapper.vm.destroyRoom()
-          expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'ルームを削除しました', type: 'success' })
+          expect(wrapper.vm.$store.state.flash).toEqual({ msg: '部屋を削除しました', type: 'success' })
         })
 
         it('push home page', async () => {
@@ -169,7 +169,7 @@ describe('ShowRoom.vue', () => {
           axios.delete.mockRejectedValueOnce(resp_404)
           const wrapper = shallowMount(ShowRoom, { router, store, localVue })
           await wrapper.vm.destroyRoom()
-          expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'ルームを見つけることができませんでした', type: 'error' })
+          expect(wrapper.vm.$store.state.flash).toEqual({ msg: '部屋を見つけることができませんでした', type: 'error' })
         })
       })
 

@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="user-rooms">
-      <h3>作成したルーム</h3>
+      <h3>作成した部屋</h3>
       <Rooms :rooms="rooms"></Rooms>
     </div>
   </div>

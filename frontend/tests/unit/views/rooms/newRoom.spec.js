@@ -47,7 +47,7 @@ describe('NewRoom.vue', () => {
           axios.post.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(NewRoom, { router, store, localVue })
           await wrapper.vm.createRoom()
-          expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'ルームを作成しました', type: 'success' })
+          expect(wrapper.vm.$store.state.flash).toEqual({ msg: '部屋を作成しました', type: 'success' })
         })
 
         it('push home page', async () => {
@@ -117,7 +117,7 @@ describe('NewRoom.vue', () => {
       input.setValue('')
       const observer = wrapper.vm.$refs.observer
       await observer.validate()
-      expect(wrapper.text()).toMatch('ルーム名を入力してください')
+      expect(wrapper.text()).toMatch('部屋名を入力してください')
     })
 
     it('validates name length', async () => {
@@ -126,7 +126,7 @@ describe('NewRoom.vue', () => {
       input.setValue('a'.repeat(301))
       const observer = wrapper.vm.$refs.observer
       await observer.validate()
-      expect(wrapper.text()).toMatch('ルーム名は300文字以内で入力してください')
+      expect(wrapper.text()).toMatch('部屋名は300文字以内で入力してください')
     })
 
     it('validates category presence', async () => {

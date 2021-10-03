@@ -1,7 +1,7 @@
 class RoomChannel < ApplicationCable::Channel
   def subscribed
     room = Room.find_by(id: params[:id])
-    reject and return if room.nil? # ルームが存在しない場合はリジェクト
+    reject and return if room.nil? # 部屋が存在しない場合はリジェクト
     stream_from "room_channel_#{room.id}"
   end
 

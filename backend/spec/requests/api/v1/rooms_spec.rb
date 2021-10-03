@@ -126,7 +126,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           post api_v1_rooms_path, params: { room: invalid_room_params }
           err = JSON.parse(response.body)['errors']
           aggregate_failures do
-            expect(err[0]).to eq 'ルーム名を入力してください'
+            expect(err[0]).to eq '部屋名を入力してください'
             expect(err[1]).to eq 'カテゴリーを選択してください'
             expect(err[2]).to eq 'カテゴリーは指定された中から選択してください'
           end
@@ -204,7 +204,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           patch api_v1_room_path(room), params: { room: invalid_room_params }
           err = JSON.parse(response.body)['errors']
           aggregate_failures do
-            expect(err[0]).to eq 'ルーム名を入力してください'
+            expect(err[0]).to eq '部屋名を入力してください'
             expect(err[1]).to eq 'カテゴリーを選択してください'
             expect(err[2]).to eq 'カテゴリーは指定された中から選択してください'
           end

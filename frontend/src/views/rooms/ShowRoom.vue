@@ -76,7 +76,7 @@ export default {
     }
   },
   computed: {
-    // ログイン中のユーザーがルームの作成者か？
+    // ログイン中のユーザーが部屋の作成者か？
     isOwner() {
       return this.$store.state.currentUser && this.$store.state.currentUser.id === this.room.user_id
     }
@@ -90,9 +90,9 @@ export default {
         this.comments = response.data.data.comments
       }
 
-      // ルームが見つからなかった
+      // 部屋が見つからなかった
       else if (response.status === 404) {
-        this.$store.dispatch('setFlash', { msg: 'ルームが見つかりませんでした', type: 'error' })
+        this.$store.dispatch('setFlash', { msg: '部屋が見つかりませんでした', type: 'error' })
         this.$router.push('/').catch(() => null)
       }
 
@@ -102,15 +102,15 @@ export default {
         this.$router.push('/').catch(() => null)
       }
     },
-    // ルームを削除
+    // 部屋を削除
     async destroyRoom() {
-      if (!window.confirm('このルームを本当に削除しますか？')) return
+      if (!window.confirm('この部屋を本当に削除しますか？')) return
 
       const response = await this.$http.delete('/api/v1/rooms/' + this.room.id).catch(err => err.response)
 
       // 成功時
       if (response.status === 200) {
-        this.$store.dispatch('setFlash', { msg: 'ルームを削除しました', type: 'success' })
+        this.$store.dispatch('setFlash', { msg: '部屋を削除しました', type: 'success' })
         this.$router.push('/').catch(() => null)
       }
 
@@ -119,9 +119,9 @@ export default {
         this.$store.dispatch('setFlash', { msg: 'この操作は禁止されています', type: 'error' })
       }
 
-      // ルームが見つからない
+      // 部屋が見つからない
       else if (response.status === 404) {
-        this.$store.dispatch('setFlash', { msg: 'ルームを見つけることができませんでした', type: 'error' })
+        this.$store.dispatch('setFlash', { msg: '部屋を見つけることができませんでした', type: 'error' })
       }
 
       // その他のエラー

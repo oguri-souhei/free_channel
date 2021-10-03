@@ -2,7 +2,7 @@
   <div class="index-room">
     <div class="search-form">
       <v-text-field
-        placeholder="ルームを検索"
+        placeholder="部屋を検索"
         outlined
         v-model="q"
         @keydown.enter.prevent="keyDownEnter"

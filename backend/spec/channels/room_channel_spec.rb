@@ -42,7 +42,7 @@ RSpec.describe RoomChannel, type: :channel do
     end
   end
 
-  # 存在しないルーム
+  # 存在しない部屋
   context 'when room is not exist' do
     before do
       subscribe id: room.id + 1000
