@@ -62,28 +62,23 @@ describe('EditUser.vue', () => {
       const resp_403 = { response: { data: { errors: ['エラーメッセージ'] }, status: 403 }}
       const resp_500 = { response: { data: null, status: 500 }}
 
-      axios.patch
-        .mockResolvedValueOnce(resp_200)
-        .mockResolvedValueOnce(resp_200)
-        .mockResolvedValueOnce(resp_200)
-        .mockRejectedValueOnce(resp_400)
-        .mockRejectedValueOnce(resp_403)
-        .mockRejectedValueOnce(resp_500)
-
       describe('when status is 200', () => {
         it('update currentUser', async () => {
+          axios.patch.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(EditUser, { store, router, localVue })
           await wrapper.vm.updateUser()
           expect(wrapper.vm.$store.state.currentUser).toEqual(updatedUser)
         })
 
         it('update flash', async () => {
+          axios.patch.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(EditUser, { store, router, localVue })
           await wrapper.vm.updateUser()
           expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'アカウントを編集しました', type: 'success'})
         })
 
         it('push home page', async () => {
+          axios.patch.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(EditUser, { store, router, localVue })
           wrapper.vm.updateUser()
           await nextTick()
@@ -93,6 +88,7 @@ describe('EditUser.vue', () => {
 
       describe('when status is 400', () => {
         it('update errors', async () => {
+          axios.patch.mockRejectedValueOnce(resp_400)
           const wrapper = shallowMount(EditUser, { store, router, localVue })
           await wrapper.vm.updateUser()
           expect(wrapper.vm.$data.errors).toEqual(['エラーメッセージ'])
@@ -101,12 +97,14 @@ describe('EditUser.vue', () => {
 
       describe('when status is 403', () => {
         it('set flash', async () => {
+          axios.patch.mockRejectedValueOnce(resp_403)
           const wrapper = shallowMount(EditUser, { store, router, localVue })
           await wrapper.vm.updateUser()
           expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'この操作は禁止されています', type: 'error' })
         })
 
         it('push login page', async () => {
+          axios.patch.mockRejectedValueOnce(resp_403)
           const wrapper = shallowMount(EditUser, { store, router, localVue })
           let q = wrapper.vm.$route.fullPath
           wrapper.vm.updateUser()

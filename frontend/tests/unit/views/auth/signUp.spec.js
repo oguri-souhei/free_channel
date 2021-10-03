@@ -40,30 +40,23 @@ describe('SignUp.vue', () => {
       const resp_403 = { response: { data: { errors: ['403'] }, status: 403 } }
       const resp_500 = { response: { data: null, status: 500 } }
 
-      axios.post
-        .mockResolvedValueOnce(resp_200)
-        .mockResolvedValueOnce(resp_200)
-        .mockResolvedValueOnce(resp_200)
-        .mockRejectedValueOnce(resp_400)
-        .mockRejectedValueOnce(resp_403)
-        .mockRejectedValueOnce(resp_403)
-        .mockRejectedValueOnce(resp_500)
-
-
       describe('when status is 200', () => {
         it('sets currentUser', async () => {
+          axios.post.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(SignUp, { store, router ,localVue})
           await wrapper.vm.signUp()
           expect(wrapper.vm.$store.state.currentUser).toEqual(mockUser)
         })
 
         it('sets flush', async () => {
+          axios.post.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(SignUp, { store, router ,localVue})
           await wrapper.vm.signUp()
           expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'アカウントを登録しました', type: 'success' })
         })
 
         it('push home page', async () => {
+          axios.post.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(SignUp, { store, router, localVue })
           wrapper.vm.signUp()
           await nextTick()
@@ -73,6 +66,7 @@ describe('SignUp.vue', () => {
 
       describe('when status is 400', () => {
         it('sets errors', async () => {
+          axios.post.mockRejectedValueOnce(resp_400)
           const wrapper = shallowMount(SignUp, { store, router, localVue })
           await wrapper.vm.signUp()
           expect(wrapper.vm.$data.errors).toEqual(['400'])
@@ -81,12 +75,14 @@ describe('SignUp.vue', () => {
 
       describe('when status is 403', () => {
         it('sets flash', async () => {
+          axios.post.mockRejectedValueOnce(resp_403)
           const wrapper = shallowMount(SignUp, { store, router, localVue })
           await wrapper.vm.signUp()
           expect(wrapper.vm.$store.state.flash).toEqual({ msg: '既にログインしています', type: 'error' })
         })
 
         it('push home page', async () => {
+          axios.post.mockRejectedValueOnce(resp_403)
           const wrapper = shallowMount(SignUp, { store, router, localVue })
           wrapper.vm.signUp()
           await nextTick()
@@ -96,6 +92,7 @@ describe('SignUp.vue', () => {
 
       describe('when status is 500', () => {
         it('sets flash', async () => {
+          axios.post.mockRejectedValueOnce(resp_500)
           const wrapper = shallowMount(SignUp, { store, router, localVue })
           await wrapper.vm.signUp()
           expect(wrapper.vm.$store.state.flash).toEqual({ msg: '未知のエラー', type: 'error'})

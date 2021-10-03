@@ -5,7 +5,6 @@ import Vuex from 'vuex'
 import store from '@/store/index'
 import VueRouter from 'vue-router'
 import router from '@/router/index'
-import vuetify from '@/plugins/vuetify'
 import axios from 'axios'
 import axiosUtils from '@/plugins/axios'
 
@@ -40,30 +39,23 @@ describe('Login.vue', () => {
       const resp_404 = { response: { data: { errors: { message: 'アカウントが見つかりませんでした' } }, status: 404 }}
       const resp_500 = { response: { data: null, status: 500 } }
 
-      axios.post
-        .mockResolvedValueOnce(resp_200)
-        .mockResolvedValueOnce(resp_200)
-        .mockResolvedValueOnce(resp_200)
-        .mockRejectedValueOnce(resp_401)
-        .mockRejectedValueOnce(resp_403)
-        .mockRejectedValueOnce(resp_403)
-        .mockRejectedValueOnce(resp_404)
-        .mockRejectedValueOnce(resp_500)
-
       describe('when status is 200', () => {
         it('sets flash', async () => {
+          axios.post.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(Login, { store, router, localVue })
           await wrapper.vm.login()
           expect(wrapper.vm.$store.state.flash).toEqual({ msg: 'ログインしました', type: 'success' })
         })
 
         it('sets currentUser', async () => {
+          axios.post.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(Login, { store, router, localVue })
           await wrapper.vm.login()
           expect(wrapper.vm.$store.state.currentUser).toEqual(mockUser)
         })
 
         it('push home page', async () => {
+          axios.post.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(Login, { store, router, localVue })
           wrapper.vm.login()
           await nextTick()
@@ -73,6 +65,7 @@ describe('Login.vue', () => {
 
       describe('when status is 401', () => {
         it('sets errors', async () => {
+          axios.post.mockRejectedValueOnce(resp_401)
           const wrapper = shallowMount(Login, { store, router, localVue })
           await wrapper.vm.login()
           expect(wrapper.vm.$data.errors).toEqual(['アドレスまたはパスワードが違います'])
@@ -81,12 +74,14 @@ describe('Login.vue', () => {
 
       describe('when status is 403', () => {
         it('sets flash', async () => {
+          axios.post.mockRejectedValueOnce(resp_403)
           const wrapper = shallowMount(Login, { store, router, localVue })
           await wrapper.vm.login()
           expect(wrapper.vm.$store.state.flash).toEqual({ msg: '既にログインしています', type: 'warning' })
         })
 
         it('push home page', async () => {
+          axios.post.mockRejectedValueOnce(resp_403)
           const wrapper = shallowMount(Login, { store, router, localVue })
           wrapper.vm.login()
           await nextTick()
@@ -96,6 +91,7 @@ describe('Login.vue', () => {
 
       describe('when status is 404', () => {
         it('sets errors', async () => {
+          axios.post.mockRejectedValueOnce(resp_404)
           const wrapper = shallowMount(Login, { store, router, localVue })
           await wrapper.vm.login()
           expect(wrapper.vm.$data.errors).toEqual(['アカウントが見つかりませんでした'])
@@ -104,6 +100,7 @@ describe('Login.vue', () => {
 
       describe('when status is 500', () => {
         it('sets errors', async () => {
+          axios.post.mockRejectedValueOnce(resp_500)
           const wrapper = shallowMount(Login, { store, router, localVue })
           await wrapper.vm.login()
           expect(wrapper.vm.$data.errors).toEqual(['未知のエラー'])

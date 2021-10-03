@@ -14,12 +14,6 @@ jest.mock('axios')
 
 const resp_200 = { data: { data: { message: 'ログアウトしました' } }, status: 200 }
 const err_resp = { response: { data: null, status: 500 }}
-axios.delete
-  .mockResolvedValueOnce(resp_200)
-  .mockResolvedValueOnce(resp_200)
-  .mockResolvedValueOnce(resp_200)
-  .mockRejectedValueOnce(err_resp)
-  .mockRejectedValueOnce(err_resp)
 
 const localVue = createLocalVue()
 localVue.use(VueRouter)
@@ -31,6 +25,7 @@ describe('LoggedIn.vue', () => {
     describe('logout', () => {
       describe('when status is 200', () => {
         it('sets flash', async () => {
+          axios.delete.mockResolvedValueOnce(resp_200)
           store.dispatch('setCurrentUser', mockUser)
           const wrapper = shallowMount(LoggedIn, { store, router, localVue })
           await wrapper.vm.logout()
@@ -38,6 +33,7 @@ describe('LoggedIn.vue', () => {
         })
 
         it('removes currentUser', async () => {
+          axios.delete.mockResolvedValueOnce(resp_200)
           store.dispatch('setCurrentUser', mockUser)
           const wrapper = shallowMount(LoggedIn, { store, router, localVue })
           await wrapper.vm.logout()
@@ -45,6 +41,7 @@ describe('LoggedIn.vue', () => {
         })
 
         it('push /', async () => {
+          axios.delete.mockResolvedValueOnce(resp_200)
           store.dispatch('setCurrentUser', mockUser)
           const wrapper = shallowMount(LoggedIn, { store, router, localVue })
           wrapper.vm.logout()
@@ -55,6 +52,7 @@ describe('LoggedIn.vue', () => {
 
       describe('when other status', () => {
         it('sets flash', async () => {
+          axios.delete.mockRejectedValueOnce(err_resp)
           store.dispatch('setCurrentUser', mockUser)
           const wrapper = shallowMount(LoggedIn, { store, router, localVue })
           await wrapper.vm.logout()
@@ -62,6 +60,7 @@ describe('LoggedIn.vue', () => {
         })
 
         it('push /', async () => {
+          axios.delete.mockRejectedValueOnce(err_resp)
           store.dispatch('setCurrentUser', mockUser)
           const wrapper = shallowMount(LoggedIn, { store, router, localVue })
           wrapper.vm.logout()
