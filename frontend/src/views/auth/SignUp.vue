@@ -124,7 +124,8 @@ export default {
         name: '',
         email: '',
         password: '',
-        password_confirmation: ''
+        password_confirmation: '',
+        avatar: null
       },
       errors: []
     }
@@ -133,7 +134,12 @@ export default {
     async signUp() {
       this.errors = [] // エラーメッセージを空に
 
-      const response = await this.$http.post('/api/v1/auth/sign_up', { user: this.user }).catch(err => err.response)
+      const formData = new FormData()
+      for(const prop in this.user) {
+        formData.append(`user[${prop}]`, this.user[prop])
+      }
+
+      const response = await this.$http.post('/api/v1/auth/sign_up', formData).catch(err => err.response)
 
       // 成功時
       if (response.status === 200) {
