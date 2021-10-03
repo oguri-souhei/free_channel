@@ -84,6 +84,9 @@ export default {
 </script>
 
 <style scoped>
+.user-page {
+  margin-top: 30px;
+}
 .user-profile {
   margin-left: 5px;
   margin-right: 5px;

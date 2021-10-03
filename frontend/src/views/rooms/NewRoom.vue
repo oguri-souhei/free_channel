@@ -120,6 +120,7 @@ li {
   max-width: 500px;
   text-align: center;
   margin: 0 auto;
+  margin-top: 30px;
   padding-left: 10px;
   padding-right: 10px;
 }

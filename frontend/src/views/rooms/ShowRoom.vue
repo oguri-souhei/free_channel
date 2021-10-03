@@ -184,6 +184,7 @@ a {
 .show-room {
   height: 100vh;
   width: 100%;
+  margin-top: 30px;
   position: relative;
 }
 
