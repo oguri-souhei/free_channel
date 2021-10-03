@@ -22,7 +22,7 @@
                 </v-list-item>
                 <v-list-item>
                   <v-list-item-content>
-                    <span>削除</span>
+                    <span @click="destroyRoom">削除</span>
                   </v-list-item-content>
                 </v-list-item>
               </v-list-item-group>
@@ -106,7 +106,7 @@ export default {
     async destroyRoom() {
       if (!window.confirm('このルームを本当に削除しますか？')) return
 
-      const response = await this.$http.delete('/rooms/' + this.room.id).catch(err => err.response)
+      const response = await this.$http.delete('/api/v1/rooms/' + this.room.id).catch(err => err.response)
 
       // 成功時
       if (response.status === 200) {
