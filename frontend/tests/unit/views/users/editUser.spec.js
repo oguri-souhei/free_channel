@@ -60,7 +60,6 @@ describe('EditUser.vue', () => {
       const resp_200 = { data: { data: updatedUser }, status: 200 }
       const resp_400 = { response: { data: { errors: ['エラーメッセージ'] }, status: 400 }}
       const resp_403 = { response: { data: { errors: ['エラーメッセージ'] }, status: 403 }}
-      const resp_500 = { response: { data: null, status: 500 }}
 
       describe('when status is 200', () => {
         it('update currentUser', async () => {
@@ -106,7 +105,6 @@ describe('EditUser.vue', () => {
         it('push login page', async () => {
           axios.patch.mockRejectedValueOnce(resp_403)
           const wrapper = shallowMount(EditUser, { store, router, localVue })
-          let q = wrapper.vm.$route.fullPath
           wrapper.vm.updateUser()
           await nextTick()
           expect(wrapper.vm.$route.path).toBe('/login')
