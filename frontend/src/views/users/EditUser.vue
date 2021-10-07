@@ -53,6 +53,7 @@
             v-model="user.password"
             id="password"
             label="パスワード"
+            type="password"
             :error-messages="errors"
             required
           ></v-text-field>
@@ -63,6 +64,7 @@
             v-model="user.password_confirmation"
             id="password_confirmation"
             label="パスワード（確認用）"
+            type="password"
             :error-messages="errors"
             required
           ></v-text-field>
@@ -71,6 +73,7 @@
         <ValidationProvider v-slot="{ errors }" name="現在のパスワード" rules="required|min:6">
           <v-text-field
             v-model="user.current_password"
+            type="password"
             id="current_password"
             label="現在のパスワード"
             :error-messages="errors"
