@@ -62,6 +62,13 @@ describe('Login', () => {
     cy.url().should('eq', 'http://localhost:8081/')
   })
 
+  // ナビゲーションガードのテスト
+  it('navigation guard', () => {
+    cy.route('/api/v1/login_user', { data: user })
+    cy.visit('/login')
+    cy.contains('このページにはアクセスできません')
+  })
+
   // アカウントが見つからなかった
   it('when user is not found', () => {
     cy.route('/api/v1/login_user', { data: null })
