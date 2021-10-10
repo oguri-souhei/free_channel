@@ -26,6 +26,7 @@
 
         <ValidationProvider v-slot="{ errors }" name="カテゴリー" rules="required">
           <v-select
+            data-test="test"
             v-model="room.category"
             :items="categories"
             id="category"
