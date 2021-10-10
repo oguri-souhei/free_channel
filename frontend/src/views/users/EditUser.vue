@@ -84,6 +84,10 @@
         <v-btn color="primary" @click="updateUser" :disabled="invalid">送信</v-btn>
       </v-form>
 
+      <div class="destroy-user">
+        <a @click="destroyUser">退会する</a>
+      </div>
+
     </ValidationObserver>
     </div>
 </template>
@@ -182,6 +186,24 @@ export default {
       else {
         this.$store.dispatch('setFlash', { msg: '未知のエラー', type: 'error' })
       }
+    },
+    async destroyUser() {
+      if (!window.confirm('本当に退会しますか？')) return
+
+      const response = await this.$http.delete('/api/v1/auth/registrations').catch(err => err.response)
+
+      // 成功
+      if (response.status === 200) {
+        this.$store.dispatch('setFlash', { msg: '退会しました', type: 'success' })
+        this.$store.dispatch('setCurrentUser', null)
+      }
+
+      // 失敗
+      else {
+        this.$store.dispatch('setFlash', { msg: '未知のエラー', type: 'error' })
+      }
+
+      this.$router.push('/').catch(() => null)
     }
   },
   mounted() {
@@ -207,11 +229,20 @@ li {
   text-align: center;
   margin: 0 auto;
   margin-top: 30px;
+  margin-bottom: 30px;
   padding-left: 10px;
   padding-right: 10px;
 }
 
 form {
   padding-top: 30px;
+}
+
+.destroy-user {
+  margin-top: 20px;
+}
+
+.destroy-user > a:hover {
+  text-decoration: underline;
 }
 </style>

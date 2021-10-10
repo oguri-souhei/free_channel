@@ -15,6 +15,11 @@ localVue.use(axiosUtils, { axios })
 
 jest.mock('axios')
 
+const updatedUser = { id: 1, name: 'foobazz', email: 'foobazz@exmaple.com' }
+const resp_200 = { data: { data: updatedUser }, status: 200 }
+const resp_400 = { response: { data: { errors: ['エラーメッセージ'] }, status: 400 }}
+const resp_403 = { response: { data: { errors: ['エラーメッセージ'] }, status: 403 }}
+
 const mockUser = { id: 1, name: 'mock user', email: 'test@example.com', password: 'password' }
 const store = new Vuex.Store({
   state: {
@@ -55,17 +60,11 @@ describe('EditUser.vue', () => {
 
   describe('Methods', () => {
     describe('#updateUser', () => {
-
-      const updatedUser = { id: 1, name: 'foobazz', email: 'foobazz@exmaple.com' }
-      const resp_200 = { data: { data: updatedUser }, status: 200 }
-      const resp_400 = { response: { data: { errors: ['エラーメッセージ'] }, status: 400 }}
-      const resp_403 = { response: { data: { errors: ['エラーメッセージ'] }, status: 403 }}
-
       describe('when status is 200', () => {
         it('update currentUser', async () => {
           axios.patch.mockResolvedValueOnce(resp_200)
           const wrapper = shallowMount(EditUser, { store, router, localVue })
-          await wrapper.vm.updateUser()
+        await wrapper.vm.updateUser()
           expect(wrapper.vm.$store.state.currentUser).toEqual(updatedUser)
         })
 
@@ -108,6 +107,49 @@ describe('EditUser.vue', () => {
           wrapper.vm.updateUser()
           await nextTick()
           expect(wrapper.vm.$route.path).toBe('/login')
+        })
+      })
+    })
+
+    describe('#destroyUser', () => {
+      beforeEach(() => {
+        global.confirm = jest.fn(() => true)
+      })
+
+      afterEach(() => {
+        store.dispatch('setCurrentUser', mockUser)
+      })
+
+      describe('when status is 200', () => {
+        it('sets flash', async () => {
+          axios.delete.mockResolvedValueOnce(resp_200)
+          const wrapper = shallowMount(EditUser, { router, store, localVue })
+          await wrapper.vm.destroyUser()
+          expect(wrapper.vm.$store.state.flash).toEqual({ msg: '退会しました', type: 'success' })
+        })
+
+        it('destroy current user', async () => {
+          axios.delete.mockResolvedValueOnce(resp_200)
+          const wrapper = shallowMount(EditUser, { router, store, localVue })
+          await wrapper.vm.destroyUser()
+          expect(wrapper.vm.$store.state.currentUser).toBe(null)
+        })
+
+        it('push home page', async () => {
+          axios.delete.mockResolvedValueOnce(resp_200)
+          const wrapper = shallowMount(EditUser, { router, store, localVue })
+          wrapper.vm.destroyUser()
+          await nextTick()
+          expect(wrapper.vm.$route.path).toBe('/')
+        })
+      })
+
+      describe('when other status', () => {
+        it('sets falsh', async () => {
+          axios.delete.mockRejectedValueOnce(resp_400)
+          const wrapper = shallowMount(EditUser, { router, store, localVue })
+          await wrapper.vm.destroyUser()
+          expect(wrapper.vm.$store.state.flash).toEqual({ msg: '未知のエラー', type: 'error' })
         })
       })
     })
