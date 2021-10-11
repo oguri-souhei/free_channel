@@ -24,7 +24,7 @@ jobs:
           command: |
             cd ./backend
             gem install bundler -v 2.2.22
-            bundle install --jobs=4 --retry=3 --gemfile
+            bundle install --jobs=4 --retry=3
       - save_cache:
           paths:
             - ./vendor/bundle
