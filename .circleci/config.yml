@@ -1,7 +1,7 @@
 version: 2.1
 
-executors:  
-  default:  
+executors:
+  api:  
     working_directory: ~/project
     docker:
       - image: circleci/ruby:3.0.2-node
@@ -13,15 +13,21 @@ executors:
         environment:
           - MYSQL_ROOT_HOST: '%'
           - MYSQL_ALLOW_EMPTY_PASSWORD: true
+  front:
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:12.18.3
+
 commands:
-  setup:
+  backend_setup:
     steps:
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "./backend/Gemfile.lock" }}
             - v1-dependencies-
+      # setup backend
       - run:
-          name: install dependencies
+          name: backend install dependencies
           command: |
             cd ./backend
             gem install bundler -v 2.2.22
@@ -41,35 +47,51 @@ commands:
             cd ./backend
             rails db:create
             rails db:migrate
+  frontend_setup:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "./frontend/yarn.lock" }}
+            - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            cd ./frontend
+            yarn install
+      - run:
+          name: build
+          command: |
+            cd ./frontend
+            yarn build
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "./frontend/yarn.lock" }}
+  unit_test:
+    steps:
+      - run:
+          name: jest
+          command: |
+            cd ./frontend
+            yarn test:unit
 
 jobs:
-  build:
-    executor: default
+  api_build:
+    executor: api
     environment:
       RAILS_ENV: test
     working_directory: ~/project
     steps:
       - checkout
-      - setup
-      - db_setup
-      - run:
-          name: rubocop
-          command: |
-            cd ./backend
-            bundle exec rubocop
-      - run:
-          name: rspec
-          command: |
-            cd ./backend
-            bin/rspec
+      - backend_setup
   rubocop:
-    executor: default
+    executor: api
     environment:
       RAILS_ENV: test
     working_directory: ~/project
     steps:
       - checkout
-      - setup
+      - backend_setup
       - db_setup
       - run:
           name: rubocop
@@ -77,27 +99,46 @@ jobs:
             cd ./backend
             bundle exec rubocop
   rspec:
-    executor: default
+    executor: api
     environment:
       RAILS_ENV: test
     working_directory: ~/project
     steps:
       - checkout
-      - setup
+      - backend_setup
       - db_setup
       - run:
           name: rspec
           command: |
             cd ./backend
             bin/rspec
+  front_build:
+    executor: front
+    working_directory: ~/project
+    steps:
+      - checkout
+      - frontend_setup
+  unit_test:
+    executor: front
+    working_directory: ~/project
+    steps:
+      - checkout
+      - unit_test
+
 workflows:
   version: 2
-  build_and_test_and_rubocop:
+  api:
     jobs:
-      - build
+      - api_build
       - rspec:
           requires:
-            - build
+            - api_build
       - rubocop:
           requires:
-            - build
+            - api_build
+  front:
+    jobs:
+      - front_build
+      - unit_test:
+          requires:
+            - front_build
