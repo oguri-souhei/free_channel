@@ -1,7 +1,8 @@
 version: 2.1
 
-jobs:
-  build:
+executors:  
+  default:  
+    working_directory: ~/project
     docker:
       - image: circleci/ruby:3.0.2-node
         environment:
@@ -11,10 +12,10 @@ jobs:
       - image: circleci/mysql:8.0
         environment:
           - MYSQL_ROOT_HOST: '%'
-          - MYSQL_ROOT_PASSWORD: password
-    working_directory: ~/project
+          - MYSQL_ALLOW_EMPTY_PASSWORD: true
+commands:
+  setup:
     steps:
-      - checkout
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "./backend/Gemfile.lock" }}
@@ -22,20 +23,35 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            cd ./backend
             gem install bundler -v 2.2.22
-            bundle install --jobs=4 --retry=3 --gemfile ./backend/Gemfile
+            bundle install --jobs=4 --retry=3
       - save_cache:
           paths:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "./backend/Gemfile.lock" }}
+  db_setup:
+    steps:
       - run:
           name: Use specific database.yml
           command: mv ./backend/config/database.yml.ci ./backend/config/database.yml
       - run:
           name: database setup
           command: |
+            cd ./backend
             rails db:create
             rails db:migrate
+
+jobs:
+  build:
+    executor: default
+    environment:
+      RAILS_ENV: test
+    working_directory: ~/project
+    steps:
+      - checkout
+      - setup
+      - db_setup
       - run:
           name: rubocop
           command: |
@@ -46,9 +62,42 @@ jobs:
           command: |
             cd ./backend
             bin/rspec
-
+  rubocop:
+    executor: default
+    environment:
+      RAILS_ENV: test
+    working_directory: ~/project
+    steps:
+      - checkout
+      - setup
+      - db_setup
+      - run:
+          name: rubocop
+          command: |
+            cd ./backend
+            bundle exec rubocop
+  rspec:
+    executor: default
+    environment:
+      RAILS_ENV: test
+    working_directory: ~/project
+    steps:
+      - checkout
+      - setup
+      - db_setup
+      - run:
+          name: rspec
+          command: |
+            cd ./backend
+            bin/rspec
 workflows:
   version: 2
-  build:
+  build_and_test_and_rubocop:
     jobs:
       - build
+      - rspec:
+          requires:
+            - build
+      - rubocop:
+          requires:
+            - build
