@@ -71,6 +71,8 @@ commands:
     steps:
       - run:
           name: jest
+          environment:
+            NODE_OPTIONS: --max_old_space_size=8192
           command: |
             cd ./frontend
             yarn test:unit
@@ -123,6 +125,7 @@ jobs:
     working_directory: ~/project
     steps:
       - checkout
+      - frontend_setup
       - unit_test
 
 workflows:
