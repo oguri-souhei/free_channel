@@ -22,8 +22,9 @@ jobs:
       - run:
           name: install dependencies
           command: |
+            cd ./backend
             gem install bundler -v 2.2.22
-            bundle install --jobs=4 --retry=3 --gemfile ./backend/Gemfile
+            bundle install --jobs=4 --retry=3 --gemfile
       - save_cache:
           paths:
             - ./vendor/bundle
@@ -34,6 +35,7 @@ jobs:
       - run:
           name: database setup
           command: |
+            cd ./backend
             rails db:create
             rails db:migrate
       - run:
