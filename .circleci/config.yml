@@ -139,3 +139,6 @@ workflows:
   front:
     jobs:
       - front_build
+      - unit_test:
+          requires:
+            - front_build
