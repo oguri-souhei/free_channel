@@ -121,4 +121,7 @@ workflows:
             - api_build
       - rubocop:
           requires:
-            - api_build      
+            - api_build
+  front:
+    jobs:
+      - front_build
