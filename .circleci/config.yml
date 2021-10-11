@@ -1,7 +1,10 @@
 version: 2.1
 
+orbs:
+  cypress: cypress-io/cypress@1
+
 executors:
-  api:  
+  api:
     working_directory: ~/project
     docker:
       - image: circleci/ruby:3.0.2-node
@@ -143,5 +146,8 @@ workflows:
     jobs:
       - front_build
       - unit_test:
+          requires:
+            - front_build
+      - cypress/run:
           requires:
             - front_build
