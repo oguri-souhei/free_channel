@@ -1,36 +1,144 @@
-version: '3'
+version: 2.1
 
-services:
-  api:
-    build: ./backend
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
-    ports:
-      - '3000:3000'
-    depends_on:
-      - db
-    volumes:
-      - ./backend:/app
-  db:
-    image: mysql:8.0
-    volumes:
-      - mysql_data:/var/lib/mysql/
-    command: --default-authentication-plugin=mysql_native_password
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-    ports:
-      - '3306:3306'
+executors:
+  api:  
+    working_directory: ~/project
+    docker:
+      - image: circleci/ruby:3.0.2-node
+        environment:
+          - BUNDLER_VERSION: 2.2.22
+          - RAILS_ENV: test
+          - DB_HOST: 127.0.0.1
+      - image: circleci/mysql:8.0
+        environment:
+          - MYSQL_ROOT_HOST: '%'
+          - MYSQL_ALLOW_EMPTY_PASSWORD: true
   front:
-    build: ./frontend
-    volumes:
-      - ./frontend:/app
-    ports:
-      - '8080:8080'
-    environment:
-      VUE_APP_API_URL: http://localhost:3000
-    tty: true
-    stdin_open: true
-    command: npm run serve
+    working_directory: ~/project
+    docker:
+      - image: circleci/node:12.18.3
 
-volumes:
-  mysql_data:
-    driver: local
+commands:
+  backend_setup:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "./backend/Gemfile.lock" }}
+            - v1-dependencies-
+      # setup backend
+      - run:
+          name: backend install dependencies
+          command: |
+            cd ./backend
+            gem install bundler -v 2.2.22
+            bundle install --jobs=4 --retry=3
+      - save_cache:
+          paths:
+            - ./vendor/bundle
+          key: v1-dependencies-{{ checksum "./backend/Gemfile.lock" }}
+  db_setup:
+    steps:
+      - run:
+          name: Use specific database.yml
+          command: mv ./backend/config/database.yml.ci ./backend/config/database.yml
+      - run:
+          name: database setup
+          command: |
+            cd ./backend
+            rails db:create
+            rails db:migrate
+  frontend_setup:
+    steps:
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "./frontend/yarn.lock" }}
+            - v1-dependencies-
+      - run:
+          name: install dependencies
+          command: |
+            cd ./frontend
+            yarn install
+      - run:
+          name: build
+          command: |
+            cd ./frontend
+            yarn build
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "./frontend/yarn.lock" }}
+  unit_test:
+    steps:
+      - run:
+          name: jest
+          command: |
+            cd ./frontend
+            yarn test:unit
+
+jobs:
+  api_build:
+    executor: api
+    environment:
+      RAILS_ENV: test
+    working_directory: ~/project
+    steps:
+      - checkout
+      - backend_setup
+  rubocop:
+    executor: api
+    environment:
+      RAILS_ENV: test
+    working_directory: ~/project
+    steps:
+      - checkout
+      - backend_setup
+      - db_setup
+      - run:
+          name: rubocop
+          command: |
+            cd ./backend
+            bundle exec rubocop
+  rspec:
+    executor: api
+    environment:
+      RAILS_ENV: test
+    working_directory: ~/project
+    steps:
+      - checkout
+      - backend_setup
+      - db_setup
+      - run:
+          name: rspec
+          command: |
+            cd ./backend
+            bin/rspec
+  front_build:
+    executor: front
+    working_directory: ~/project
+    steps:
+      - checkout
+      - frontend_setup
+  unit_test:
+    executor: front
+    working_directory: ~/project
+    steps:
+      - checkout
+      - unit_test
+
+workflows:
+  version: 2
+  api:
+    jobs:
+      - api_build
+      - rspec:
+          requires:
+            - api_build
+      - rubocop:
+          requires:
+            - api_build
+  front:
+    jobs:
+      - front_build
+      - unit_test:
+          requires:
+            - front_build
