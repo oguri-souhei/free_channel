@@ -1,7 +1,8 @@
 version: 2.1
 
-jobs:
-  build:
+executors:  
+  default:  
+    working_directory: ~/project
     docker:
       - image: circleci/ruby:3.0.2-node
         environment:
@@ -12,9 +13,9 @@ jobs:
         environment:
           - MYSQL_ROOT_HOST: '%'
           - MYSQL_ALLOW_EMPTY_PASSWORD: true
-    working_directory: ~/project
+commands:
+  setup:
     steps:
-      - checkout
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "./backend/Gemfile.lock" }}
@@ -29,6 +30,8 @@ jobs:
           paths:
             - ./vendor/bundle
           key: v1-dependencies-{{ checksum "./backend/Gemfile.lock" }}
+  db_setup:
+    steps:
       - run:
           name: Use specific database.yml
           command: mv ./backend/config/database.yml.ci ./backend/config/database.yml
@@ -38,6 +41,17 @@ jobs:
             cd ./backend
             rails db:create
             rails db:migrate
+
+jobs:
+  build:
+    executor: default
+    environment:
+      RAILS_ENV: test
+    working_directory: ~/project
+    steps:
+      - checkout
+      - setup
+      - db_setup
       - run:
           name: rubocop
           command: |
