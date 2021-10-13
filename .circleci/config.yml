@@ -69,6 +69,13 @@ commands:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "./frontend/yarn.lock" }}
+  eslint:
+    steps:
+      - run:
+          name: eslint
+          command: |
+            cd ./frontend
+            yarn lint
   unit_test:
     steps:
       - run:
@@ -122,6 +129,13 @@ jobs:
     steps:
       - checkout
       - frontend_setup
+  eslint:
+    executor: front
+    working_directory: ~/project
+    steps:
+      - checkout
+      - frontend_setup
+      - eslint
   unit_test:
     executor: front
     working_directory: ~/project
@@ -144,6 +158,9 @@ workflows:
   front:
     jobs:
       - front_build
+      - eslint:
+          requires:
+            - front_build
       - unit_test:
           requires:
             - front_build
