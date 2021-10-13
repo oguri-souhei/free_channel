@@ -59,7 +59,7 @@ describe('Login', () => {
     })
     cy.contains('button', 'ログイン').should('not.be.disabled').click()
     cy.contains('既にログインしています')
-    cy.url().should('eq', 'http://localhost:8081/')
+    cy.url().should('eq', 'http://localhost:8080/')
   })
 
   // ナビゲーションガードのテスト

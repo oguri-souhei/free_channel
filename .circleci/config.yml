@@ -28,7 +28,6 @@ commands:
           keys:
             - v1-dependencies-{{ checksum "./backend/Gemfile.lock" }}
             - v1-dependencies-
-      # setup backend
       - run:
           name: backend install dependencies
           command: |
@@ -149,5 +148,7 @@ workflows:
           requires:
             - front_build
       - cypress/run:
-          requires:
-            - front_build
+          cache-key: cache-{{ arch }}-{{ .Branch }}-{{ checksum "./frontend/package.json" }}
+          working_directory: ~/project/frontend
+          yarn: true
+          command: yarn test:e2e --headless
