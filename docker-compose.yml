@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+  front:
+    build: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - '8080:80'
+    environment:
+      VUE_APP_API_URL: http://localhost:3000
+    tty: true
+    stdin_open: true
+    networks:
+      - frontend
   api:
     build: ./backend
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
@@ -10,6 +22,11 @@ services:
       - db
     volumes:
       - ./backend:/app
+    environment:
+      DB_HOST: db
+    networks:
+      - backend
+      - frontend
   db:
     image: mysql:8.0
     volumes:
@@ -19,18 +36,23 @@ services:
       MYSQL_ROOT_PASSWORD: password
     ports:
       - '3306:3306'
-  front:
-    build: ./frontend
-    volumes:
-      - ./frontend:/app
-    ports:
-      - '8080:8080'
-    environment:
-      VUE_APP_API_URL: http://localhost:3000
-    tty: true
-    stdin_open: true
-    command: npm run serve
+    networks:
+      - backend
 
 volumes:
   mysql_data:
     driver: local
+
+networks:
+  frontend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.10.0/24
+  backend:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.20.0/24
