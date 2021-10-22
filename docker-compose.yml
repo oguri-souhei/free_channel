@@ -2,44 +2,58 @@ version: '3'
 
 services:
   # 開発環境用
-  front:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile.build
-    command: npm run serve
-    ports:
-      - '8080:8080'
-    volumes:
-      - ./frontend:/app
-    environment:
-      VUE_APP_API_URL: http://localhost:3000
-    tty: true
-    stdin_open: true
-    networks:
-      - frontend
-  # 本番環境用
   # front:
-  #   build: ./frontend
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile.build
+  #   command: npm run serve
   #   ports:
-  #     - '8080:80'
+  #     - '8080:8080'
+  #   volumes:
+  #     - ./frontend:/app
+  #   environment:
+  #     VUE_APP_API_URL: http://localhost:3000
   #   tty: true
   #   stdin_open: true
   #   networks:
   #     - frontend
+  # 本番環境用
+  front:
+    build: ./frontend
+    ports:
+      - '8080:80'
+    tty: true
+    stdin_open: true
+    networks:
+      - frontend
+  nginx:
+    build: ./nginx
+    volumes:
+      - public-data:/app/public
+      - tmp-data:/app/tmp
+    ports:
+      - '80:80'
+    depends_on:
+      - api
+    networks:
+      - frontend
+      - backend
   api:
     build: ./backend
-    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    command: bundle exec pumactl start
     ports:
       - '3000:3000'
     depends_on:
       - db
     volumes:
       - ./backend:/app
+      - public-data:/app/public
+      - tmp-data:/app/tmp
+      - log-data:/app/log
     environment:
       DB_HOST: db
     networks:
       - backend
-      - frontend
   db:
     image: mysql:8.0
     volumes:
@@ -53,6 +67,9 @@ services:
       - backend
 
 volumes:
+  public-data:
+  tmp-data:
+  log-data:
   mysql_data:
     driver: local
 
