@@ -12,7 +12,7 @@ services:
   #   volumes:
   #     - ./frontend:/app
   #   environment:
-  #     VUE_APP_API_URL: http://localhost:3000
+  #     VUE_APP_API_HOST: http://localhost:3000
   #   tty: true
   #   stdin_open: true
   #   networks:
@@ -36,11 +36,9 @@ services:
     depends_on:
       - api
     networks:
-      - frontend
       - backend
   api:
     build: ./backend
-    command: bundle exec pumactl start
     ports:
       - '3000:3000'
     depends_on:
@@ -52,8 +50,7 @@ services:
       - log-data:/app/log
     environment:
       DB_HOST: db
-    networks:
-      - backend
+      FRONTEND_HOST: http://localhost:8080
   db:
     image: mysql:8.0
     volumes:
@@ -79,10 +76,10 @@ networks:
     ipam:
       driver: default
       config:
-        - subnet: 192.168.10.0/24
+        - subnet: 10.0.10.0/24
   backend:
     driver: bridge
     ipam:
       driver: default
       config:
-        - subnet: 192.168.20.0/24
+        - subnet: 10.0.20.0/24

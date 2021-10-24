@@ -10,7 +10,7 @@ import actioncable from 'actioncable'
 
 Vue.config.productionTip = false
 
-const cable = actioncable.createConsumer('http://localhost:3000/cable')
+const cable = actioncable.createConsumer(process.env.VUE_APP_API_HOST + '/cable')
 Vue.prototype.$cable = cable
 
 Vue.use(axiosUtils, { axios });

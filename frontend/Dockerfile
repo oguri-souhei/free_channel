@@ -2,8 +2,8 @@
 FROM node:lts-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
-# 環境変数にしたい。。。
-ENV VUE_APP_API_URL=http://localhost:3000
+ENV NODE_ENV=production
+ENV VUE_APP_API_HOST=http://api.freechannel.link
 RUN npm install
 COPY . .
 RUN npm run build
