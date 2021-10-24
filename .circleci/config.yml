@@ -198,6 +198,25 @@ workflows:
           service-name: 'frontend'
           # containerはタスク定義で設定したコンテナ名にする
           container-image-name-updates: "container=frontend,tag=${CIRCLE_SHA1}"
+  nginx_deploy:
+    jobs:
+      - aws-ecr/build-and-push-image:
+          #AWS_ECR_ACCOUNT_URL => ${アカウントID}.dkr.ecr.${リージョン}.amazonaws.com
+          account-url: AWS_ECR_ACCOUNT_URL
+          # リージョン
+          region: AWS_REGION
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+          # ECRにリポジトリがなかったら創るか？
+          create-repo: true
+          # Dockerfleのパス(デフォルトはカレントディレクトリのパス)
+          dockerfile: ./nginx/Dockerfile
+          # ECRのリポジトリ
+          repo: nginx-sample
+          tag: "${CIRCLE_SHA1}"
+          # filters:
+          #   branches:
+          #     only: master
   api_deploy:
     jobs:
       - aws-ecr/build-and-push-image:
@@ -225,22 +244,3 @@ workflows:
           service-name: 'backend'
           # containerはタスク定義で設定したコンテナ名にする
           container-image-name-updates: "container=backend,tag=${CIRCLE_SHA1}"
-  nginx_deploy:
-    jobs:
-      - aws-ecr/build-and-push-image:
-          #AWS_ECR_ACCOUNT_URL => ${アカウントID}.dkr.ecr.${リージョン}.amazonaws.com
-          account-url: AWS_ECR_ACCOUNT_URL
-          # リージョン
-          region: AWS_REGION
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          # ECRにリポジトリがなかったら創るか？
-          create-repo: true
-          # Dockerfleのパス(デフォルトはカレントディレクトリのパス)
-          dockerfile: ./nginx/Dockerfile
-          # ECRのリポジトリ
-          repo: nginx-sample
-          tag: "${CIRCLE_SHA1}"
-          # filters:
-          #   branches:
-          #     only: master
