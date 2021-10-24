@@ -145,6 +145,34 @@ jobs:
       - checkout
       - frontend_setup
       - unit_test
+  build_and_push_image_backend:
+    machine: 
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_ACCOUNT_URL
+          repo: "freechannel-nginx"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+          path: ./nginx/
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_ACCOUNT_URL
+          repo: "freechannel-api"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+          path: ./backend/
+  build_and_push_image_frontend:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_ACCOUNT_URL
+          repo: "freechannel-front"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+          path: ./frontend/
 
 workflows:
   version: 2
@@ -157,6 +185,13 @@ workflows:
       - rubocop:
           requires:
             - api_build
+      - build_and_push_image_backend:
+          # requires:
+          #    - rspec
+          #    - rubocop
+          # filters:
+          #   branches:
+          #     only: master
   front:
     jobs:
       - front_build
@@ -171,76 +206,11 @@ workflows:
           working_directory: ~/project/frontend
           yarn: true
           command: yarn test:e2e --headless
-  front_deploy:
-    jobs:
-      - aws-ecr/build-and-push-image:
-          account-url: AWS_ECR_ACCOUNT_URL
-          region: AWS_REGION
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          # ECRにリポジトリがなかったら創るか？
-          create-repo: true
-          dockerfile: ./frontend/Dockerfile
-          # ECRのリポジトリ
-          repo: freechannel-front
-          tag: "${CIRCLE_SHA1}"
+      - build_and_push_image_front:
+          # requires:
+          #   - eslint
+          #   - unit_test
+          #   - cypress/run
           # filters:
           #   branches:
           #     only: master
-      - aws-ecs/deploy-service-update:
-          requires:
-            - aws-ecr/build-and-push-image
-          # ECSのタスク定義名
-          family: 'frontend'
-          # ECSのクラスター名かARNのフルパス
-          cluster-name: 'freechannel'
-          # サービス名
-          service-name: 'frontend'
-          # containerはタスク定義で設定したコンテナ名にする
-          container-image-name-updates: "container=frontend,tag=${CIRCLE_SHA1}"
-  nginx_deploy:
-    jobs:
-      - aws-ecr/build-and-push-image:
-          #AWS_ECR_ACCOUNT_URL => ${アカウントID}.dkr.ecr.${リージョン}.amazonaws.com
-          account-url: AWS_ECR_ACCOUNT_URL
-          # リージョン
-          region: AWS_REGION
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          # ECRにリポジトリがなかったら創るか？
-          create-repo: true
-          # Dockerfleのパス(デフォルトはカレントディレクトリのパス)
-          dockerfile: ./nginx/Dockerfile
-          # ECRのリポジトリ
-          repo: nginx-sample
-          tag: "${CIRCLE_SHA1}"
-          # filters:
-          #   branches:
-          #     only: master
-  api_deploy:
-    jobs:
-      - aws-ecr/build-and-push-image:
-          account-url: AWS_ECR_ACCOUNT_URL
-          region: AWS_REGION
-          aws-access-key-id: AWS_ACCESS_KEY_ID
-          aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-          # ECRにリポジトリがなかったら創るか？
-          create-repo: true
-          dockerfile: ./backend/Dockerfile
-          # ECRのリポジトリ
-          repo: freechannel-api
-          tag: "${CIRCLE_SHA1}"
-          # filters:
-          #   branches:
-          #     only: master
-      - aws-ecs/deploy-service-update:
-          requires:
-            - aws-ecr/build-and-push-image
-          # ECSのタスク定義名
-          family: 'backend'
-          # ECSのクラスター名かARNのフルパス
-          cluster-name: 'freechannel'
-          # サービス名
-          service-name: 'backend'
-          # containerはタスク定義で設定したコンテナ名にする
-          container-image-name-updates: "container=backend,tag=${CIRCLE_SHA1}"
