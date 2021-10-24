@@ -49,8 +49,8 @@ commands:
           name: database setup
           command: |
             cd ./backend
-            rails db:create
-            rails db:migrate
+            rails db:create RAILS_ENV=test
+            rails db:migrate RAILS_ENV=test
   frontend_setup:
     steps:
       - restore_cache:
