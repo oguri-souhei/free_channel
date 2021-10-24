@@ -15,8 +15,6 @@ services:
   #     VUE_APP_API_HOST: http://localhost:3000
   #   tty: true
   #   stdin_open: true
-  #   networks:
-  #     - frontend
   # 本番環境用
   front:
     build: ./frontend
@@ -24,8 +22,6 @@ services:
       - '8080:80'
     tty: true
     stdin_open: true
-    networks:
-      - frontend
   nginx:
     build: ./nginx
     volumes:
@@ -35,8 +31,6 @@ services:
       - '80:80'
     depends_on:
       - api
-    networks:
-      - backend
   api:
     build: ./backend
     ports:
@@ -60,8 +54,6 @@ services:
       MYSQL_ROOT_PASSWORD: password
     ports:
       - '3306:3306'
-    networks:
-      - backend
 
 volumes:
   public-data:
@@ -69,17 +61,3 @@ volumes:
   log-data:
   mysql_data:
     driver: local
-
-networks:
-  frontend:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.0.10.0/24
-  backend:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.0.20.0/24

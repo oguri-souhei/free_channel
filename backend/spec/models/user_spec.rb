@@ -80,13 +80,13 @@ RSpec.describe User, type: :model do
     # アバター
     context 'avatar' do
       it 'is valid with allow formatted file' do
-        user.avatar = File.open("#{Rails.root}/spec/files/test.jpg")
+        user.avatar = File.open("#{Rails.root}/files/test.jpg")
         user.valid?
         expect(user.errors[:avatar]).to be_blank
       end
 
       it 'is invalid with forbidden type file' do
-        user.avatar = File.open("#{Rails.root}/spec/files/test.txt")
+        user.avatar = File.open("#{Rails.root}/files/test.txt")
         user.valid?
         expect(user.errors[:avatar]).to include '"txt"ファイルのアップロードは許可されていません。アップロードできるファイルタイプ：jpg, jpeg, png'
       end

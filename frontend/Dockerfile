@@ -2,6 +2,7 @@ FROM node:12.18.3-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
 ENV VUE_APP_API_HOST=http://api.freechannel.link
+ENV NODE_ENV=production
 RUN npm install
 COPY . .
 RUN npm run build

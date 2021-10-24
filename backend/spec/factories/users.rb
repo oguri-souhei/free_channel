@@ -21,10 +21,10 @@ FactoryBot.define do
   end
 
   trait :avatar do
-    avatar { Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/files/test.jpg')) }
+    avatar { Rack::Test::UploadedFile.new(File.join(Rails.root, 'files/test.jpg')) }
   end
 
   trait :invalid_avatar do
-    avatar { Rack::Test::UploadedFile.new(File.join(Rails.root, 'spec/files/test.txt')) }
+    avatar { Rack::Test::UploadedFile.new(File.join(Rails.root, 'files/test.txt')) }
   end
 end
