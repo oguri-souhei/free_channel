@@ -30,7 +30,7 @@ describe('Avatar.vue', () => {
         const wrapper = shallowMount(Avatar, {
           propsData: { url: '/foo.jpg'}
         })
-        expect(wrapper.vm.avatarUrl).toBe(process.env.VUE_APP_API_URL + '/foo.jpg')
+        expect(wrapper.vm.avatarUrl).toBe(process.env.VUE_APP_API_HOST + '/foo.jpg')
       })
     })
   })

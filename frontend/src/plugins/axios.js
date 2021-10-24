@@ -1,7 +1,7 @@
 export default {
   install(Vue, { axios }) {
-    // APIサーバーのURL
-    axios.defaults.baseURL = process.env.VUE_APP_API_URL
+    const apiHost = process.env.NODE_ENV === 'production' ? 'https://api.freechannel.link' : 'http://localhost:3000'
+    axios.defaults.baseURL = apiHost
 
     // デフォルトのヘッダ
     axios.defaults.headers.common = {

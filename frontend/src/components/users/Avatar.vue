@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     avatarUrl() {
-      return process.env.VUE_APP_API_URL + this.url
+      return process.env.VUE_APP_API_HOST + this.url
     }
   }
 }
