@@ -200,7 +200,7 @@ workflows:
           family: "backend"
           service-name: "backend"
           cluster-name: "freechannel"
-          container-image-name-updates: "container=freechannel-api,tag=${CIRCLE_SHA1}"
+          container-image-name-updates: "container=backend,tag=${CIRCLE_SHA1}"
           # filters:
           #   branches:
           #     only: master
@@ -232,7 +232,7 @@ workflows:
           family: "frontend"
           service-name: "frontend"
           cluster-name: "freechannel"
-          container-image-name-updates: "container=freechannel-front,tag=${CIRCLE_SHA1}"
+          container-image-name-updates: "container=frontend,tag=${CIRCLE_SHA1}"
           # filters:
           #   branches:
           #     only: master
