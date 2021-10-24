@@ -200,7 +200,7 @@ workflows:
           family: "backend"
           service-name: "backend"
           cluster-name: "freechannel"
-          container-image-name-updates: "container=api,tag=${CIRCLE_SHA1},container="nginx,tag=${CIRCLE_SHA1}"
+          container-image-name-updates: "container=api,tag=${CIRCLE_SHA1},container=nginx,tag=${CIRCLE_SHA1}"
           # filters:
           #   branches:
           #     only: master
