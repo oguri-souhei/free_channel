@@ -49,8 +49,8 @@ commands:
           name: database setup
           command: |
             cd ./backend
-            rails db:create RAILS_ENV=test
-            rails db:migrate RAILS_ENV=test
+            rails db:create
+            rails db:migrate
   frontend_setup:
     steps:
       - restore_cache:
@@ -101,6 +101,7 @@ jobs:
     executor: api
     environment:
       RAILS_ENV: test
+      FRONTEND_HOST: http://localhost:8080
     working_directory: ~/project
     steps:
       - checkout
@@ -115,6 +116,7 @@ jobs:
     executor: api
     environment:
       RAILS_ENV: test
+      FRONTEND_HOST: http://localhost:8080
     working_directory: ~/project
     steps:
       - checkout
@@ -167,8 +169,6 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - run: 
-          command: npm install @vue/cli -g
       - aws-ecr/build-and-push-image:
           account-url: AWS_ECR_ACCOUNT_URL
           repo: "freechannel-front"

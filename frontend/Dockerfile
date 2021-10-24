@@ -1,10 +1,8 @@
-FROM node:lts-alpine as build-stage
+FROM node:12.18.3-alpine as build-stage
 WORKDIR /app
 COPY package*.json ./
-ENV NODE_ENV=production
 ENV VUE_APP_API_HOST=http://api.freechannel.link
 RUN npm install
-RUN npm install @vue/cli
 COPY . .
 RUN npm run build
 
