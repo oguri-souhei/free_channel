@@ -197,8 +197,8 @@ workflows:
       - aws-ecs/deploy-service-update:
           requires:
             - build_and_push_image_backend
-          family: "freechannel-backend-task"
-          service-name: "freechannel-backend-service"
+          family: "backend"
+          service-name: "backend"
           cluster-name: "freechannel"
           container-image-name-updates: "container=freechannel-api,tag=${CIRCLE_SHA1}"
           # filters:
@@ -229,8 +229,8 @@ workflows:
       - aws-ecs/deploy-service-update:
           requires:
             - build_and_push_image_frontend
-          family: "freechannel-frontend-task"
-          service-name: "freechannel-frontend-service"
+          family: "frontend"
+          service-name: "frontend"
           cluster-name: "freechannel"
           container-image-name-updates: "container=freechannel-front,tag=${CIRCLE_SHA1}"
           # filters:
