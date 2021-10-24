@@ -185,7 +185,7 @@ workflows:
       - rubocop:
           requires:
             - api_build
-      - build_and_push_image_backend:
+      - build_and_push_image_backend
           # requires:
           #    - rspec
           #    - rubocop
@@ -206,7 +206,7 @@ workflows:
           working_directory: ~/project/frontend
           yarn: true
           command: yarn test:e2e --headless
-      - build_and_push_image_front:
+      - build_and_push_image_front
           # requires:
           #   - eslint
           #   - unit_test
