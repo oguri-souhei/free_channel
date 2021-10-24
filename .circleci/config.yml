@@ -194,6 +194,16 @@ workflows:
           # filters:
           #   branches:
           #     only: master
+      - aws-ecs/deploy-service-update:
+          requires:
+            - build_and_push_image_backend
+          family: "freechannel-backend-task"
+          service-name: "freechannel-backend-service"
+          cluster-name: "freechannel"
+          container-image-name-updates: "container=freechannel-api,tag=${CIRCLE_SHA1}"
+          # filters:
+          #   branches:
+          #     only: master
   front:
     jobs:
       - front_build
@@ -213,6 +223,16 @@ workflows:
           #   - eslint
           #   - unit_test
           #   - cypress/run
+          # filters:
+          #   branches:
+          #     only: master
+      - aws-ecs/deploy-service-update:
+          requires:
+            - build_and_push_image_frontend
+          family: "freechannel-frontend-task"
+          service-name: "freechannel-frontend-service"
+          cluster-name: "freechannel"
+          container-image-name-updates: "container=freechannel-front,tag=${CIRCLE_SHA1}"
           # filters:
           #   branches:
           #     only: master
