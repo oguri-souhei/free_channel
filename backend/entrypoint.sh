@@ -5,9 +5,9 @@ set -e
 rm -f /app/tmp/pids/server.pid
 
 # database setup
-bundle exec rails db:create
-bundle exec rails db:migrate:reset DISABLE_DATABASE_ENVIRONMENT_CHECK=1
-bundle exec rails db:seed 
+# bundle exec rails db:create
+# bundle exec rails db:migrate:reset DISABLE_DATABASE_ENVIRONMENT_CHECK=1
+# bundle exec rails db:seed 
 
 # Then exec the container's main process (what's set as CMD in the Dockerfile).
 exec "$@"
