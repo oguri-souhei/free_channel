@@ -5,7 +5,6 @@ foo = User.create!({
   email: 'foo@bar.com',
   password: 'password',
   password_confirmation: 'password',
-  avatar: File.open("#{Rails.root}/files/profile.jpg")
 })
 
 tom = User.create!({
@@ -13,7 +12,6 @@ tom = User.create!({
   email: 'tom@example.com',
   password: 'password',
   password_confirmation: 'password',
-  avatar: File.open("#{Rails.root}/files/dog.jpg")
 })
 
 taro = User.create!({
@@ -21,7 +19,6 @@ taro = User.create!({
   email: 'taro@example.com',
   password: 'password',
   password_confirmation: 'password',
-  avatar: File.open("#{Rails.root}/files/cat.jpg")
 })
 
 pien = User.create!({
@@ -29,7 +26,6 @@ pien = User.create!({
   email: 'pien@example.com',
   password: 'passsword',
   password_confirmation: 'passsword',
-  avatar: File.open("#{Rails.root}/files/pien.png")
 })
 
 bar = User.create!({
