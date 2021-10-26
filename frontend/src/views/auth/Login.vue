@@ -34,7 +34,7 @@
         ></v-text-field>
         </ValidationProvider>
 
-        <v-btn color="primary" @click="login" :disabled="invalid">ログイン</v-btn>
+        <v-btn color="primary" class="login" @click="login" :disabled="invalid" data-cy-login-button>ログイン</v-btn>
 
       </v-form>
     </ValidationObserver>

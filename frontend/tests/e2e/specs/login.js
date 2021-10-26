@@ -8,7 +8,7 @@ describe('Login', () => {
   it('user log in', () => {
     cy.route('/api/v1/login_user', { data: null })
     cy.visit('/login')
-    cy.contains('ログイン')
+    cy.get('[data-cy-login-button]')
     cy.contains('label', 'メールアドレス').next('input').type(user.email)
     cy.contains('label', 'パスワード').next('input').type(user.password).blur()
     // ログイン用APIのモック
@@ -20,7 +20,7 @@ describe('Login', () => {
       },
       status: 200
     })
-    cy.contains('button', 'ログイン').should('not.be.disabled').click()
+    cy.get('[data-cy-login-button]').should('not.be.disabled').click()
     cy.contains('div', 'ログインしました')
   })
 
@@ -39,7 +39,7 @@ describe('Login', () => {
       },
       status: 401
     })
-    cy.contains('button', 'ログイン').should('be.disabled').click()
+    cy.get('[data-cy-login-button]').should('be.disabled').click()
     cy.contains('アドレスまたはパスワードが違います')
   })
 
@@ -57,7 +57,7 @@ describe('Login', () => {
       },
       status: 403
     })
-    cy.contains('button', 'ログイン').should('not.be.disabled').click()
+    cy.get('[data-cy-login-button]').should('not.be.disabled').click()
     cy.contains('既にログインしています')
     cy.url().should('eq', 'http://localhost:8080/')
   })
@@ -83,7 +83,7 @@ describe('Login', () => {
       },
       status: 404
     })
-    cy.contains('button', 'ログイン').click()
+    cy.get('[data-cy-login-button]').click()
     cy.contains('アカウントが見つかりませんでした')
   })
 
@@ -99,7 +99,7 @@ describe('Login', () => {
       response: {},
       status: 500
     })
-    cy.contains('button', 'ログイン').click()
+    cy.get('[data-cy-login-button]').click()
     cy.contains('未知のエラー')
   })
 
@@ -107,7 +107,7 @@ describe('Login', () => {
   it('validates attributes', () => {
     cy.route('/api/v1/login_user', { data: null })
     cy.visit('/login')
-    cy.contains('button', 'ログイン').should('be.disabled')
+    cy.get('[data-cy-login-button]').should('be.disabled')
     // メールアドレス
     cy.contains('label', 'メールアドレス').next('input').type('   ').blur()
     cy.contains('メールアドレスを入力してください')
@@ -120,6 +120,6 @@ describe('Login', () => {
     cy.contains('パスワードを入力してください')
     cy.contains('label', 'パスワード').next('input').clear().type('aaa')
     cy.contains('パスワードは6文字以上で入力してください')
-    cy.contains('button', 'ログイン').should('be.disabled')
+    cy.get('[data-cy-login-button]').should('be.disabled')
   })
 })
