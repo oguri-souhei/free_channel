@@ -82,11 +82,9 @@ commands:
     steps:
       - run:
           name: jest
-          environment:
-            NODE_OPTIONS: --max_old_space_size=2048
           command: |
             cd ./frontend
-            yarn test:unit
+            yarn test:unit --runInBand
 
 jobs:
   api_build:
@@ -187,13 +185,13 @@ workflows:
       - rubocop:
           requires:
             - api_build
-      - build_and_push_image_backend
-          # requires:
-          #    - rspec
-          #    - rubocop
-          # filters:
-          #   branches:
-          #     only: master
+      - build_and_push_image_backend:
+          requires:
+             - rspec
+             - rubocop
+          filters:
+            branches:
+              only: master
       - aws-ecs/deploy-service-update:
           requires:
             - build_and_push_image_backend
@@ -201,9 +199,9 @@ workflows:
           service-name: "backend"
           cluster-name: "freechannel"
           container-image-name-updates: "container=api,tag=${CIRCLE_SHA1},container=nginx,tag=${CIRCLE_SHA1}"
-          # filters:
-          #   branches:
-          #     only: master
+          filters:
+            branches:
+              only: master
   front:
     jobs:
       - front_build
@@ -218,14 +216,14 @@ workflows:
           working_directory: ~/project/frontend
           yarn: true
           command: yarn test:e2e --headless
-      - build_and_push_image_frontend
-          # requires:
-          #   - eslint
-          #   - unit_test
-          #   - cypress/run
-          # filters:
-          #   branches:
-          #     only: master
+      - build_and_push_image_frontend:
+          requires:
+            - eslint
+            - unit_test
+            - cypress/run
+          filters:
+            branches:
+              only: master
       - aws-ecs/deploy-service-update:
           requires:
             - build_and_push_image_frontend
@@ -233,6 +231,6 @@ workflows:
           service-name: "frontend"
           cluster-name: "freechannel"
           container-image-name-updates: "container=frontend,tag=${CIRCLE_SHA1}"
-          # filters:
-          #   branches:
-          #     only: master
+          filters:
+            branches:
+              only: master

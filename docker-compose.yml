@@ -22,15 +22,15 @@ services:
   #     - '8080:80'
   #   tty: true
   #   stdin_open: true
-  # nginx:
-  #   build: ./nginx
-  #   volumes:
-  #     - public-data:/app/public
-  #     - tmp-data:/app/tmp
-  #   ports:
-  #     - '80:80'
-  #   depends_on:
-      # - api
+  nginx:
+    build: ./nginx
+    volumes:
+      - public-data:/app/public
+      - tmp-data:/app/tmp
+    ports:
+      - '80:80'
+    depends_on:
+      - api
   api:
     build: ./backend
     ports:
