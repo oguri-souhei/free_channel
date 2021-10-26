@@ -13,18 +13,16 @@
           </ul>
         </div>
 
-        <ValidationProvider v-slot="{ errors, validate }" name="アバター" rules="ext:jpg,jpeg,png">
-          <Avatar :url="user.avatar && user.avatar.url"></Avatar>
-          <v-file-input
-            v-model="user.avatar"
-            id="avatar"
-            label="アバター"
-            truncate-length="15"
-            :error-messages="errors"
-            @change="validate"
-            show-size
-          ></v-file-input>
-        </ValidationProvider>
+        <Avatar :url="user.avatar && user.avatar.url"></Avatar>
+        <v-file-input
+          v-model="user.avatar"
+          id="avatar"
+          label="アバター"
+          truncate-length="15"
+          accept="image/png, image/jpg, image/jpeg"
+          prepend-icon="mdi-camera"
+          show-size
+        ></v-file-input>
 
         <ValidationProvider v-slot="{ errors }" name="名前" rules="required|max:50">
           <v-text-field

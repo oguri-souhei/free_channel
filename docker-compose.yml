@@ -2,35 +2,35 @@ version: '3'
 
 services:
   # 開発環境用
-  # front:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile.build
-  #   command: npm run serve
-  #   ports:
-  #     - '8080:8080'
-  #   volumes:
-  #     - ./frontend:/app
-  #   environment:
-  #     VUE_APP_API_HOST: http://localhost:3000
-  #   tty: true
-  #   stdin_open: true
-  # 本番環境用
   front:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.build
+    command: npm run serve
     ports:
-      - '8080:80'
+      - '8080:8080'
+    volumes:
+      - ./frontend:/app
+    environment:
+      VUE_APP_API_HOST: http://localhost:3000
     tty: true
     stdin_open: true
-  nginx:
-    build: ./nginx
-    volumes:
-      - public-data:/app/public
-      - tmp-data:/app/tmp
-    ports:
-      - '80:80'
-    depends_on:
-      - api
+  # 本番環境用
+  # front:
+  #   build: ./frontend
+  #   ports:
+  #     - '8080:80'
+  #   tty: true
+  #   stdin_open: true
+  # nginx:
+  #   build: ./nginx
+  #   volumes:
+  #     - public-data:/app/public
+  #     - tmp-data:/app/tmp
+  #   ports:
+  #     - '80:80'
+  #   depends_on:
+      # - api
   api:
     build: ./backend
     ports:
