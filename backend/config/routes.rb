@@ -33,4 +33,6 @@ Rails.application.routes.draw do
       end
     end
   end
+
+  get '/health', to: 'application#health'
 end
