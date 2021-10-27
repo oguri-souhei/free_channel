@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     avatarUrl() {
-      return process.env.VUE_APP_AWS_S3_HOST + this.url
+      return this.url
     }
   }
 }
