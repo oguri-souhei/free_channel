@@ -216,6 +216,8 @@ workflows:
           working_directory: ~/project/frontend
           yarn: true
           command: yarn test:e2e --headless
+          requires:
+            - front_build
       - build_and_push_image_frontend:
           requires:
             - eslint
