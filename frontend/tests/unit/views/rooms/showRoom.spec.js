@@ -194,13 +194,12 @@ describe('ShowRoom.vue', () => {
     })
 
     describe('createComment', () => {
-      // ログイン時のテスト。。。
-
       describe('when user is not logged in', () => {
         it('sets flash', async () => {
           await store.dispatch('setCurrentUser', null)
           const wrapper = shallowMount(ShowRoom, { router, store, localVue })
-          wrapper.vm.createComment({ target: { value: 'foo' }})
+          wrapper.setData({ comment: 'comment' })
+          wrapper.vm.createComment()
           setTimeout(() => {
             expect(wrapper.vm.$store.flash).toEqual({ msg: 'コメントするにはログインしてください', type: 'warning' })
           }, 1)
@@ -208,7 +207,8 @@ describe('ShowRoom.vue', () => {
 
         it('push home page', async () => {
           const wrapper = shallowMount(ShowRoom, { router, store, localVue })
-          wrapper.vm.createComment({ target: { value: 'foo' }})
+          wrapper.setData({ comment: 'comment' })
+          wrapper.vm.createComment()
           await nextTick()
           expect(wrapper.vm.$route.path).toBe('/login')
         })
