@@ -1,4 +1,4 @@
-unless Rails.env.development? || Rails.env.test?
+if Rails.env.production?
   CarrierWave.configure do |config|
     config.fog_credentials = {
       provider: 'AWS',
