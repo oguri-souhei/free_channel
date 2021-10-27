@@ -11,6 +11,7 @@ gem 'devise'
 gem 'rack-cors'
 gem 'rails-i18n'
 gem 'carrierwave'
+gem 'fog' # 画像をs3にアップロード
 gem 'faker'
 gem 'kaminari'
 
