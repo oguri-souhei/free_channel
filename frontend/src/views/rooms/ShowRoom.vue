@@ -50,10 +50,18 @@
         <textarea
           placeholder="コメントを入力"
           id="sentence"
+          v-model="comment"
           @keydown.enter.exact.prevent="keyDownEnter"
           @keyup.enter.exact="createComment"
         ></textarea>
       </form>
+      <v-btn
+        color="primary"
+        class="comment-submit-button"
+        @click="submitComment"
+        data-cy-comment-submit-button>
+        <v-icon>mdi-send</v-icon>
+      </v-btn>
     </div>
   </div>
 </template>
@@ -70,6 +78,7 @@ export default {
   data() {
     return {
       room: {},
+      comment: '',
       comments: [],
       roomChannel: null,
       keyDownCode: null
@@ -132,8 +141,9 @@ export default {
     keyDownEnter(e) {
       this.keyDownCode = e.keyCode // enterを押した時のkeycodeを記録
     },
-    createComment(e) {
-      if (e.target.value.trim().length === 0) return // コメントが空の場合
+    // Enterキーを押してコメントした場合の処理
+    createComment() {
+      if (this.comment.trim().length === 0) return // コメントが空の場合
       if (this.keyDownCode === 229) return // 229コードの場合（日本語変換確定時のEnterキー）は処理をスキップ
       // ログインしていない
       if (!this.$store.getters.isLoggedIn) {
@@ -142,9 +152,22 @@ export default {
         return
       }
 
-      const comment = { sentence: e.target.value, user_id: this.$store.state.currentUser.id, room_id: this.room.id }
+      const comment = { sentence: this.comment, user_id: this.$store.state.currentUser.id, room_id: this.room.id }
       this.roomChannel.comment(comment)
-      e.target.value = ''
+      this.comment = ''
+    },
+    // ボタンを押してコメントした場合の処理
+    submitComment() {
+      if (this.comment.trim().length === 0) return // コメントがからの場合
+      // ログインしていない場合
+      if (!this.$store.getters.isLoggedIn) {
+        this.$store.dispatch('setFlash', { msg: 'コメントするにはログインしてください', type: 'warning' })
+        this.$router.push({ path: '/login', query: { path: this.$route.fullPath }})
+        return
+      }
+      const comment = { sentence: this.comment, user_id: this.$store.state.currentUser.id, room_id: this.room.id }
+      this.roomChannel.comment(comment)
+      this.comment = ''
     }
   },
   created() {
@@ -216,14 +239,15 @@ a {
 
 .comment-field {
     position: fixed;
+    display: flex;
     bottom: 0px;
     width: 100%;
-    height: 100px;
-    background: #fff;
+    height: 80px;
+    background: #ccc;
 }
 
 form {
-  width: 100%;
+  width: 90%;
   height: 100%;
 }
 
@@ -234,5 +258,10 @@ textarea {
   border: 1px solid #ccc;
   border-radius: 3px;
   padding: 5px;
+}
+
+.comment-submit-button {
+  width: 10%;
+  height: 80px !important;
 }
 </style>
