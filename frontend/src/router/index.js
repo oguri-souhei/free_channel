@@ -103,6 +103,16 @@ const routes = [
       title: '部屋 | ' + APP_NAME,
       requiresAuth: null
     }
+  },
+  // ページが見つからない場合はトップページを表示
+  {
+    path: '*',
+    name: 'Home',
+    component: () => import('../views/Home.vue'),
+    meta: {
+      title: APP_NAME,
+      requiresAuth: null
+    }
   }
 ]
 
