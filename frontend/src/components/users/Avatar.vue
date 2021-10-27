@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     avatarUrl() {
-      return process.env.NODE_ENV === 'production' ? this.url : process.env.VUE_APP_API_HOST + this.url
+      return this.url
     }
   }
 }
