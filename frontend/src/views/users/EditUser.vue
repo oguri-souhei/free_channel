@@ -157,6 +157,11 @@ export default {
         formData.append(`user[${prop}]`, this.user[prop])
       }
 
+      // アバター画像が未入力の場合
+      if (typeof formData.get('user[avatar]') === 'string') {
+        formData.delete('user[avatar]') // フォームデータからアバターを削除
+      }
+
       const response = await this.$http.patch('/api/v1/auth/registrations', formData).catch(err => err.response)
 
       // 成功時

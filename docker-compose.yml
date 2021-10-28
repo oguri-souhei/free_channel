@@ -1,7 +1,6 @@
 version: '3'
 
 services:
-  # 開発環境用
   front:
     build:
       context: ./frontend
@@ -12,8 +11,7 @@ services:
     volumes:
       - ./frontend:/app
     environment:
-      VUE_APP_API_HOST: http://localhost:3000
-      VUE_APP_S3_HOST: http://localhost:3000
+      VUE_APP_API_HOST: http://localhost:80
     tty: true
     stdin_open: true
   nginx:
@@ -27,8 +25,6 @@ services:
       - api
   api:
     build: ./backend
-    ports:
-      - '3000:3000'
     depends_on:
       - db
     volumes:

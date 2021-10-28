@@ -26,11 +26,16 @@ describe('Avatar.vue', () => {
 
   describe('Computed', () => {
     describe('avatarUrl', () => {
+      const apiHost = 'http://localhost:80'
+      beforeEach(() => {
+        process.env.VUE_APP_API_HOST = apiHost
+      })
+
       it('returns fullpath', () => {
         const wrapper = shallowMount(Avatar, {
           propsData: { url: '/foo.jpg'}
         })
-        expect(wrapper.vm.avatarUrl).toBe('/foo.jpg')
+        expect(wrapper.vm.avatarUrl).toBe(apiHost + '/foo.jpg')
       })
     })
   })
