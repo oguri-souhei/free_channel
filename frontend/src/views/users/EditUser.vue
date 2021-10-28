@@ -171,7 +171,7 @@ export default {
         this.$store.dispatch('setCurrentUser', user)
         this.$store.dispatch('setFlash', { msg: 'アカウントを編集しました', type: 'success' })
 
-        this.$router.push('/').catch(() => null) // 。。。
+        this.$router.push('/').catch(() => null)
       }
 
       // パラメータが不正
