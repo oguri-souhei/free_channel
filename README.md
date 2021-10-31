@@ -6,6 +6,16 @@
 ## URL
 https://freechannel.link
 
+## 機能一覧
+- SPA
+- ユーザー登録機能・ログイン機能(devise)
+- 部屋作成機能
+- 画像投稿機能(carrierwave, fog, S3)
+- リアルタイムチャット機能(ActionCable)
+- コメントいいね機能(Ajax)
+- ページネーション機能(kaminari, vuetify)
+- 部屋検索機能
+
 ## 使用技術
 - Git
 - CircleCI
@@ -30,7 +40,7 @@ https://freechannel.link
 - フロントエンド
   - Nginx
   - JavaScript
-  - Vue.js
+  - Vue.js 2.6
   - VueRouter
   - Vuex
   - Axios
@@ -42,15 +52,8 @@ https://freechannel.link
 ## AWSインフラ構成図
 ![インフラ構成図](./freechannel.drawio.jpg)
 
-## 機能一覧
-- SPA
-- ユーザー登録機能・ログイン機能(devise)
-- 部屋作成機能
-- 画像投稿機能(carrierwave, fog, S3)
-- リアルタイムチャット機能(ActionCable)
-- コメントいいね機能(Ajax)
-- ページネーション機能(kaminari, vuetify)
-- 部屋検索機能
+## ER図
+![ER図](./backend/erd.jpg)
 
 ## テスト
 - バックエンド
