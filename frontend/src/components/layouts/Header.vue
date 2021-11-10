@@ -17,10 +17,6 @@
           <v-icon>mdi-magnify</v-icon>
         </router-link>
 
-        <router-link class="icon" to="/about">
-          <v-icon>mdi-help-circle</v-icon>
-        </router-link>
-
         <template v-slot:extension>
           <template v-if="isLoggedIn">
             <LoggedIn></LoggedIn>

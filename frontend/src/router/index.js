@@ -15,15 +15,6 @@ const routes = [
       requiresAuth: null
     }
   },
-  {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/About.vue'),
-    meta: {
-      title: 'About | ' + APP_NAME,
-      requiresAuth: null
-    }
-  },
   // アカウント登録ページ
   {
     path: '/sign_up',
