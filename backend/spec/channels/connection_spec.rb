@@ -1,3 +1,5 @@
+require "rails_helper"
+
 RSpec.describe ApplicationCable::Connection, type: :channel do
   let(:user) { instance_double(User, id: 1211) }
   let(:env)  { instance_double('env') }
