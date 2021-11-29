@@ -1,5 +1,3 @@
-include RoomsHelper
-
 # アバターの画像ファイル一覧
 avatars = [
   'files/animal_hoshibana_mogura.png',

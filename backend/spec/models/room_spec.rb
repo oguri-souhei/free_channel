@@ -1,5 +1,4 @@
 require 'rails_helper'
-include RoomsHelper
 
 RSpec.describe Room, type: :model do
   let(:tom) { create(:tom) }
