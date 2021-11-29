@@ -5,6 +5,7 @@ class Room < ApplicationRecord
   has_many :comments, dependent: :destroy
 
   validates :name, presence: true, length: { maximum: 300 }
+  validates :description, length: { maximum: 1000 }
   validates :user_id, presence: true, numericality: { only_integer: true }
   validates :category, presence: true, inclusion: { in: CATEGORIES }
 
