@@ -74,6 +74,9 @@ RSpec.describe Room, type: :model do
         aggregate_failures do
           expect(tom_room.data[:id]).to eq tom_room.id
           expect(tom_room.data[:theme]).to eq tom_room.theme
+          expect(tom_room.data[:description]).to eq tom_room.description
+          expect(tom_room.data[:opinion_1]).to eq tom_room.opinion_1
+          expect(tom_room.data[:opinion_2]).to eq tom_room.opinion_2
           expect(tom_room.data[:created_at]).to eq tom_room.created_at
           expect(tom_room.data[:comment_count]).to eq tom_room.comments.count
         end

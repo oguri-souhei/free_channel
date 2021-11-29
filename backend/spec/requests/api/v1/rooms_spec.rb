@@ -5,7 +5,10 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
   let(:other_user) { create(:user) }
   let(:room) { create(:room, user: tom) }
   let(:room_params) { attributes_for(:room) }
-  let(:invalid_room_params) { attributes_for(:room, theme: ' ', description: 'a' * 1001) }
+  let(:invalid_room_params) {
+    attributes_for(:room,
+      theme: ' ', description: 'a' * 1001, opinion_1: '   ', opinion_2: 'a' * 101)
+  }
   let(:new_room_params) { attributes_for(:new_room) }
 
   describe 'GET /api/v1/rooms' do
@@ -52,6 +55,9 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         aggregate_failures do
           expect(data['room']['id']).to eq room.id
           expect(data['room']['theme']).to eq room.theme
+          expect(data['room']['description']).to eq room.description
+          expect(data['room']['opinion_1']).to eq room.opinion_1
+          expect(data['room']['opinion_2']).to eq room.opinion_2
           expect(data['comments']).to eq room.comments
         end
       end
@@ -127,6 +133,8 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           aggregate_failures do
             expect(err[0]).to eq 'テーマを入力してください'
             expect(err[1]).to eq '部屋の説明は1000文字以内で入力してください'
+            expect(err[2]).to eq '意見Aを入力してください'
+            expect(err[3]).to eq '意見Bは100文字以内で入力してください'
           end
         end
 
@@ -174,6 +182,8 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           aggregate_failures do
             expect(data['theme']).to eq new_room_params[:theme]
             expect(data['description']).to eq new_room_params[:description]
+            expect(data['opinion_1']).to eq new_room_params[:opinion_1]
+            expect(data['opinion_2']).to eq new_room_params[:opinion_2]
           end
         end
 
@@ -183,6 +193,8 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           aggregate_failures do
             expect(room.theme).to eq new_room_params[:theme]
             expect(room.description).to eq new_room_params[:description]
+            expect(room.opinion_1).to eq new_room_params[:opinion_1]
+            expect(room.opinion_2).to eq new_room_params[:opinion_2]
           end
         end
       end
@@ -204,6 +216,8 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           aggregate_failures do
             expect(err[0]).to eq 'テーマを入力してください'
             expect(err[1]).to eq '部屋の説明は1000文字以内で入力してください'
+            expect(err[2]).to eq '意見Aを入力してください'
+            expect(err[3]).to eq '意見Bは100文字以内で入力してください'
           end
         end
 
@@ -251,6 +265,8 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         aggregate_failures do
           expect(room.theme).to_not eq new_room_params[:theme]
           expect(room.description).to_not eq new_room_params[:description]
+          expect(room.opinion_1).to_not eq new_room_params[:opinion_1]
+          expect(room.opinion_2).to_not eq new_room_params[:opinion_2]
         end
       end
     end
@@ -272,6 +288,8 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         aggregate_failures do
           expect(room.theme).to_not eq new_room_params[:theme]
           expect(room.description).to_not eq new_room_params[:description]
+          expect(room.opinion_1).to_not eq new_room_params[:opinion_1]
+          expect(room.opinion_2).to_not eq new_room_params[:opinion_2]
         end
       end
     end
@@ -415,6 +433,9 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         aggregate_failures do
           expect(data['id']).to eq room.id
           expect(data['theme']).to eq room.theme
+          expect(data['description']).to eq room.description
+          expect(data['opinion_1']).to eq room.opinion_1
+          expect(data['opinion_2']).to eq room.opinion_2
         end
       end
     end

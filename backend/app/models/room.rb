@@ -17,6 +17,9 @@ class Room < ApplicationRecord
     {
       id: id,
       theme: theme,
+      description: description,
+      opinion_1: opinion_1,
+      opinion_2: opinion_2,
       created_at: created_at,
       comment_count: self.comments.count,
     }
