@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_29_015614) do
+ActiveRecord::Schema.define(version: 2021_11_29_022656) do
 
   create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "sentence"
@@ -37,6 +37,8 @@ ActiveRecord::Schema.define(version: 2021_11_29_015614) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.text "description"
+    t.string "opinion_1"
+    t.string "opinion_2"
     t.index ["user_id"], name: "index_rooms_on_user_id"
   end
 

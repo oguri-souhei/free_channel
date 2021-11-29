@@ -27,6 +27,16 @@ RSpec.describe Room, type: :model do
       it { should validate_length_of(:description).is_at_most(1000).with_message('は1000文字以内で入力してください') }
     end
 
+    context 'opinion_1' do
+      it { should validate_presence_of(:opinion_1).with_message('を入力してください') }
+      it { should validate_length_of(:opinion_1).is_at_most(100).with_message('は100文字以内で入力してください') }
+    end
+
+    context 'opinion_2' do
+      it { should validate_presence_of(:opinion_2).with_message('を入力してください') }
+      it { should validate_length_of(:opinion_2).is_at_most(100).with_message('は100文字以内で入力してください') }
+    end
+
     context 'user_id' do
       it { should validate_presence_of(:user_id).with_message('を入力してください') }
 

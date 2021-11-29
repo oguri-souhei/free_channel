@@ -4,6 +4,8 @@ class Room < ApplicationRecord
 
   validates :theme, presence: true, length: { maximum: 300 }
   validates :description, length: { maximum: 1000 }
+  validates :opinion_1, presence: true, length: { maximum: 100 }
+  validates :opinion_2, presence: true, length: { maximum: 100 }
   validates :user_id, presence: true, numericality: { only_integer: true }
 
   # 名前にマッチする検索結果を取得する
