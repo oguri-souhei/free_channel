@@ -32,7 +32,7 @@ ja:
         password_confirmation: パスワード（確認用）
       room:
         id: ID
-        name: 部屋名
+        theme: テーマ
         category: カテゴリー
       comment:
         id: ID

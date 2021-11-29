@@ -5,7 +5,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
   let(:other_user) { create(:user) }
   let(:room) { create(:room, user: tom) }
   let(:room_params) { attributes_for(:room) }
-  let(:invalid_room_params) { attributes_for(:room, name: ' ', category: ' ') }
+  let(:invalid_room_params) { attributes_for(:room, theme: ' ', category: ' ') }
   let(:new_room_params) { attributes_for(:new_room) }
 
   describe 'GET /api/v1/rooms' do
@@ -51,7 +51,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         data = JSON.parse(response.body)['data']
         aggregate_failures do
           expect(data['room']['id']).to eq room.id
-          expect(data['room']['name']).to eq room.name
+          expect(data['room']['theme']).to eq room.theme
           expect(data['room']['category']).to eq room.category
           expect(data['comments']).to eq room.comments
         end
@@ -98,7 +98,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           post api_v1_rooms_path, params: { room: room_params }
           data = JSON.parse(response.body)['data']
           aggregate_failures do
-            expect(data['name']).to eq room_params[:name]
+            expect(data['theme']).to eq room_params[:theme]
             expect(data['category']).to eq room_params[:category]
             expect(data['user_id']).to eq tom.id
           end
@@ -126,7 +126,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           post api_v1_rooms_path, params: { room: invalid_room_params }
           err = JSON.parse(response.body)['errors']
           aggregate_failures do
-            expect(err[0]).to eq '部屋名を入力してください'
+            expect(err[0]).to eq 'テーマを入力してください'
             expect(err[1]).to eq 'カテゴリーを選択してください'
             expect(err[2]).to eq 'カテゴリーは指定された中から選択してください'
           end
@@ -174,7 +174,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           patch api_v1_room_path(room), params: { room: new_room_params }
           data = JSON.parse(response.body)['data']
           aggregate_failures do
-            expect(data['name']).to eq new_room_params[:name]
+            expect(data['theme']).to eq new_room_params[:theme]
             expect(data['category']).to eq new_room_params[:category]
           end
         end
@@ -183,7 +183,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           patch api_v1_room_path(room), params: { room: new_room_params }
           room.reload
           aggregate_failures do
-            expect(room.name).to eq new_room_params[:name]
+            expect(room.theme).to eq new_room_params[:theme]
             expect(room.category).to eq new_room_params[:category]
           end
         end
@@ -204,7 +204,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           patch api_v1_room_path(room), params: { room: invalid_room_params }
           err = JSON.parse(response.body)['errors']
           aggregate_failures do
-            expect(err[0]).to eq '部屋名を入力してください'
+            expect(err[0]).to eq 'テーマを入力してください'
             expect(err[1]).to eq 'カテゴリーを選択してください'
             expect(err[2]).to eq 'カテゴリーは指定された中から選択してください'
           end
@@ -214,7 +214,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           patch api_v1_room_path(room), params: { room: invalid_room_params }
           room.reload
           aggregate_failures do
-            expect(room.name).to_not eq invalid_room_params[:name]
+            expect(room.theme).to_not eq invalid_room_params[:theme]
             expect(room.category).to_not eq invalid_room_params[:category]
           end
         end
@@ -252,7 +252,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         patch api_v1_room_path(room), params: { room: new_room_params }
         room.reload
         aggregate_failures do
-          expect(room.name).to_not eq new_room_params[:name]
+          expect(room.theme).to_not eq new_room_params[:theme]
           expect(room.category).to_not eq new_room_params[:category]
         end
       end
@@ -273,7 +273,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         patch api_v1_room_path(room), params: { room: new_room_params }
         room.reload
         aggregate_failures do
-          expect(room.name).to_not eq new_room_params[:name]
+          expect(room.theme).to_not eq new_room_params[:theme]
           expect(room.category).to_not eq new_room_params[:category]
         end
       end
@@ -417,7 +417,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         data = JSON.parse(response.body)['data']
         aggregate_failures do
           expect(data['id']).to eq room.id
-          expect(data['name']).to eq room.name
+          expect(data['theme']).to eq room.theme
           expect(data['category']).to eq room.category
         end
       end

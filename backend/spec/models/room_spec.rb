@@ -19,9 +19,9 @@ RSpec.describe Room, type: :model do
   end
 
   describe 'Validation' do
-    context 'name' do
-      it { should validate_presence_of(:name).with_message('を入力してください') }
-      it { should validate_length_of(:name).is_at_most(300).with_message('は300文字以内で入力してください') }
+    context 'theme' do
+      it { should validate_presence_of(:theme).with_message('を入力してください') }
+      it { should validate_length_of(:theme).is_at_most(300).with_message('は300文字以内で入力してください') }
     end
 
     context 'description' do
@@ -53,7 +53,7 @@ RSpec.describe Room, type: :model do
   describe 'Methods' do
     context '.search' do
       it 'returns result' do
-        room_1 = create(:room, name: 'プログラミングするよ')
+        room_1 = create(:room, theme: 'プログラミングするよ')
         room_2 = create(:room, category: 'プログラミング')
         room_3 = create(:room, category: 'その他')
         result = Room.search('プログラミング')
@@ -69,7 +69,7 @@ RSpec.describe Room, type: :model do
         comments = create_list(:comment, 7, room: tom_room)
         aggregate_failures do
           expect(tom_room.data[:id]).to eq tom_room.id
-          expect(tom_room.data[:name]).to eq tom_room.name
+          expect(tom_room.data[:theme]).to eq tom_room.theme
           expect(tom_room.data[:category]).to eq tom_room.category
           expect(tom_room.data[:created_at]).to eq tom_room.created_at
           expect(tom_room.data[:comment_count]).to eq tom_room.comments.count
