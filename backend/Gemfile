@@ -19,6 +19,7 @@ gem 'kaminari'
 group :development, :test do
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem 'factory_bot_rails'
+  gem 'guard-rspec', require: false # Rspecを自動実行
 end
 
 group :development do
