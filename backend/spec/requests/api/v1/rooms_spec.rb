@@ -5,7 +5,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
   let(:other_user) { create(:user) }
   let(:room) { create(:room, user: tom) }
   let(:room_params) { attributes_for(:room) }
-  let(:invalid_room_params) { attributes_for(:room, theme: ' ', description: 'a' * 1001, category: ' ') }
+  let(:invalid_room_params) { attributes_for(:room, theme: ' ', description: 'a' * 1001) }
   let(:new_room_params) { attributes_for(:new_room) }
 
   describe 'GET /api/v1/rooms' do
@@ -52,7 +52,6 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         aggregate_failures do
           expect(data['room']['id']).to eq room.id
           expect(data['room']['theme']).to eq room.theme
-          expect(data['room']['category']).to eq room.category
           expect(data['comments']).to eq room.comments
         end
       end
@@ -100,7 +99,6 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           aggregate_failures do
             expect(data['theme']).to eq room_params[:theme]
             expect(data['description']).to eq room_params[:description]
-            expect(data['category']).to eq room_params[:category]
             expect(data['user_id']).to eq tom.id
           end
         end
@@ -129,8 +127,6 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           aggregate_failures do
             expect(err[0]).to eq 'テーマを入力してください'
             expect(err[1]).to eq '部屋の説明は1000文字以内で入力してください'
-            expect(err[2]).to eq 'カテゴリーを選択してください'
-            expect(err[3]).to eq 'カテゴリーは指定された中から選択してください'
           end
         end
 
@@ -178,7 +174,6 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           aggregate_failures do
             expect(data['theme']).to eq new_room_params[:theme]
             expect(data['description']).to eq new_room_params[:description]
-            expect(data['category']).to eq new_room_params[:category]
           end
         end
 
@@ -188,7 +183,6 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           aggregate_failures do
             expect(room.theme).to eq new_room_params[:theme]
             expect(room.description).to eq new_room_params[:description]
-            expect(room.category).to eq new_room_params[:category]
           end
         end
       end
@@ -210,8 +204,6 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           aggregate_failures do
             expect(err[0]).to eq 'テーマを入力してください'
             expect(err[1]).to eq '部屋の説明は1000文字以内で入力してください'
-            expect(err[2]).to eq 'カテゴリーを選択してください'
-            expect(err[3]).to eq 'カテゴリーは指定された中から選択してください'
           end
         end
 
@@ -220,7 +212,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           room.reload
           aggregate_failures do
             expect(room.theme).to_not eq invalid_room_params[:theme]
-            expect(room.category).to_not eq invalid_room_params[:category]
+            expect(room.description).to_not eq invalid_room_params[:description]
           end
         end
       end
@@ -258,7 +250,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         room.reload
         aggregate_failures do
           expect(room.theme).to_not eq new_room_params[:theme]
-          expect(room.category).to_not eq new_room_params[:category]
+          expect(room.description).to_not eq new_room_params[:description]
         end
       end
     end
@@ -279,7 +271,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         room.reload
         aggregate_failures do
           expect(room.theme).to_not eq new_room_params[:theme]
-          expect(room.category).to_not eq new_room_params[:category]
+          expect(room.description).to_not eq new_room_params[:description]
         end
       end
     end
@@ -356,7 +348,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
     context 'when query is not blank' do
       before do
         @rooms = create_list(:room, 101)
-        get api_v1_rooms_search_path, params: { q: 'プログラミング' }
+        get api_v1_rooms_search_path, params: { q: 'Test' }
       end
 
       it 'responds :ok' do
@@ -423,7 +415,6 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
         aggregate_failures do
           expect(data['id']).to eq room.id
           expect(data['theme']).to eq room.theme
-          expect(data['category']).to eq room.category
         end
       end
     end

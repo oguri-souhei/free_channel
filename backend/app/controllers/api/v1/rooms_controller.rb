@@ -69,7 +69,7 @@ class Api::V1::RoomsController < Api::V1::ApplicationController
   private
 
   def room_params
-    params.require(:room).permit(:theme, :description, :category)
+    params.require(:room).permit(:theme, :description)
   end
 
   def set_room

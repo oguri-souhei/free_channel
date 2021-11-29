@@ -28,11 +28,6 @@ RSpec.describe Room, type: :model do
       it { should validate_length_of(:description).is_at_most(1000).with_message('は1000文字以内で入力してください') }
     end
 
-    context 'category' do
-      it { should validate_presence_of(:category).with_message('を選択してください') }
-      it { should validate_inclusion_of(:category).in_array(CATEGORIES).with_message('は指定された中から選択してください') }
-    end
-
     context 'user_id' do
       it { should validate_presence_of(:user_id).with_message('を入力してください') }
 
@@ -54,8 +49,8 @@ RSpec.describe Room, type: :model do
     context '.search' do
       it 'returns result' do
         room_1 = create(:room, theme: 'プログラミングするよ')
-        room_2 = create(:room, category: 'プログラミング')
-        room_3 = create(:room, category: 'その他')
+        room_2 = create(:room, theme: 'プログラミング')
+        room_3 = create(:room, theme: 'その他')
         result = Room.search('プログラミング')
         aggregate_failures do
           expect(result).to include room_1
@@ -70,7 +65,6 @@ RSpec.describe Room, type: :model do
         aggregate_failures do
           expect(tom_room.data[:id]).to eq tom_room.id
           expect(tom_room.data[:theme]).to eq tom_room.theme
-          expect(tom_room.data[:category]).to eq tom_room.category
           expect(tom_room.data[:created_at]).to eq tom_room.created_at
           expect(tom_room.data[:comment_count]).to eq tom_room.comments.count
         end
