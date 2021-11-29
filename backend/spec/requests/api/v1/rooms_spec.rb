@@ -5,7 +5,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
   let(:other_user) { create(:user) }
   let(:room) { create(:room, user: tom) }
   let(:room_params) { attributes_for(:room) }
-  let(:invalid_room_params) { attributes_for(:room, theme: ' ', category: ' ') }
+  let(:invalid_room_params) { attributes_for(:room, theme: ' ', description: 'a' * 1001, category: ' ') }
   let(:new_room_params) { attributes_for(:new_room) }
 
   describe 'GET /api/v1/rooms' do
@@ -99,6 +99,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           data = JSON.parse(response.body)['data']
           aggregate_failures do
             expect(data['theme']).to eq room_params[:theme]
+            expect(data['description']).to eq room_params[:description]
             expect(data['category']).to eq room_params[:category]
             expect(data['user_id']).to eq tom.id
           end
@@ -127,8 +128,9 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           err = JSON.parse(response.body)['errors']
           aggregate_failures do
             expect(err[0]).to eq 'テーマを入力してください'
-            expect(err[1]).to eq 'カテゴリーを選択してください'
-            expect(err[2]).to eq 'カテゴリーは指定された中から選択してください'
+            expect(err[1]).to eq '部屋の説明は1000文字以内で入力してください'
+            expect(err[2]).to eq 'カテゴリーを選択してください'
+            expect(err[3]).to eq 'カテゴリーは指定された中から選択してください'
           end
         end
 
@@ -175,6 +177,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           data = JSON.parse(response.body)['data']
           aggregate_failures do
             expect(data['theme']).to eq new_room_params[:theme]
+            expect(data['description']).to eq new_room_params[:description]
             expect(data['category']).to eq new_room_params[:category]
           end
         end
@@ -184,6 +187,7 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           room.reload
           aggregate_failures do
             expect(room.theme).to eq new_room_params[:theme]
+            expect(room.description).to eq new_room_params[:description]
             expect(room.category).to eq new_room_params[:category]
           end
         end
@@ -205,8 +209,9 @@ RSpec.describe 'Api::V1::Rooms', type: :request do
           err = JSON.parse(response.body)['errors']
           aggregate_failures do
             expect(err[0]).to eq 'テーマを入力してください'
-            expect(err[1]).to eq 'カテゴリーを選択してください'
-            expect(err[2]).to eq 'カテゴリーは指定された中から選択してください'
+            expect(err[1]).to eq '部屋の説明は1000文字以内で入力してください'
+            expect(err[2]).to eq 'カテゴリーを選択してください'
+            expect(err[3]).to eq 'カテゴリーは指定された中から選択してください'
           end
         end
 

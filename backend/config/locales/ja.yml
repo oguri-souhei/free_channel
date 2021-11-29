@@ -33,6 +33,7 @@ ja:
       room:
         id: ID
         theme: テーマ
+        description: 部屋の説明
         category: カテゴリー
       comment:
         id: ID
