@@ -84,6 +84,7 @@ RSpec.describe Comment, type: :model do
         aggregate_failures do
           expect(tom_comment.data[:id]).to eq tom_comment.id
           expect(tom_comment.data[:sentence]).to eq tom_comment.sentence
+          expect(tom_comment.data[:opinion]).to eq tom_comment.opinion
           expect(tom_comment.data[:created_at]).to eq tom_comment.created_at
           expect(tom_comment.data[:user_id]).to eq tom_comment.user_id
           expect(tom_comment.data[:user_name]).to eq tom_comment.user.name

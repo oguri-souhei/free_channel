@@ -15,6 +15,7 @@ class Comment < ApplicationRecord
     {
       id:             self.id,
       sentence:       self.sentence,
+      opinion:        self.opinion,
       created_at:     self.created_at,
       avatar:         self.user.avatar,
       user_id:        self.user_id,
