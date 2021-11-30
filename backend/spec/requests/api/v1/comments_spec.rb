@@ -30,6 +30,7 @@ RSpec.describe 'Comments', type: :request do
           data = JSON.parse(response.body)['data']
           aggregate_failures do
             expect(data['sentence']).to eq comment_params[:sentence]
+            expect(data['opinion']).to eq comment_params[:opinion]
             expect(data['user_id']).to eq tom.id
             expect(data['room_id']).to eq tom_room.id
           end

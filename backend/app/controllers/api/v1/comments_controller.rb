@@ -23,7 +23,7 @@ class Api::V1::CommentsController < Api::V1::ApplicationController
   private
 
   def comment_params
-    params.require(:comment).permit(:sentence)
+    params.require(:comment).permit(:sentence, :opinion)
   end
 
   def set_comment
