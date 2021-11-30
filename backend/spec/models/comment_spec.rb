@@ -26,10 +26,23 @@ RSpec.describe Comment, type: :model do
     end
   end
 
+  describe 'Enum' do
+    it { should define_enum_for(:opinion).with_values(other_opinion: 0, opinion_1: 1, opinion_2: 2) }
+  end
+
   describe 'Validation' do
     context 'sentence' do
       it { should validate_presence_of(:sentence) }
       it { should validate_length_of(:sentence).is_at_most(1000) }
+    end
+
+    context 'opinion' do
+      it { should validate_presence_of(:opinion).with_message('を入力してください') }
+
+      it 'sets default value' do
+        comment = Comment.new
+        expect(comment.opinion).to eq 'other_opinion'
+      end
     end
 
     context 'user_id' do

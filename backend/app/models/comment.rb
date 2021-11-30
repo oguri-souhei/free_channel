@@ -3,7 +3,10 @@ class Comment < ApplicationRecord
   belongs_to :room
   has_many :favorites, dependent: :destroy
 
+  enum opinion: { other_opinion: 0, opinion_1: 1, opinion_2: 2 }
+
   validates :sentence, presence: true, length: { maximum: 1000 }
+  validates :opinion, presence: true
   validates :user_id, presence: true, numericality: { only_integer: true }
   validates :room_id, presence: true, numericality: { only_integer: true }
 
