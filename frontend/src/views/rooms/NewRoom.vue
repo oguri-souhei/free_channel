@@ -13,26 +13,50 @@
           </ul>
         </div>
 
-        <ValidationProvider v-slot="{ errors }" name="部屋名" rules="required|max:300">
+        <ValidationProvider v-slot="{ errors }" name="テーマ" rules="required|max:300">
           <v-text-field
-            v-model="room.name"
-            id="name"
+            v-model="room.theme"
+            id="theme"
             :counter="300"
-            label="部屋名"
+            label="テーマ"
             :error-messages="errors"
             required
+            outlined
           ></v-text-field>
         </ValidationProvider>
 
-        <ValidationProvider v-slot="{ errors }" name="カテゴリー" rules="required">
-          <v-select
+        <ValidationProvider v-slot="{ errors }" name="部屋の説明" rules="max:1000">
+          <v-textarea
             data-test="test"
-            v-model="room.category"
-            :items="categories"
-            id="category"
-            label="カテゴリー"
+            v-model="room.description"
+            id="description"
+            :counter="1000"
+            label="部屋の説明"
             :error-messages="errors"
-          ></v-select>
+            outlined
+          ></v-textarea>
+        </ValidationProvider>
+
+        <ValidationProvider v-slot="{ errors }" name="意見A" rules="required|max:100">
+          <v-text-field
+            v-model="room.opinion_1"
+            id="opinion_1"
+            :counter="100"
+            label="意見A"
+            :error-messages="errors"
+            outlined
+          ></v-text-field>
+        </ValidationProvider>
+
+        <ValidationProvider v-slot="{ errors }" name="意見B" rules="required|max:100">
+          <v-text-field
+            v-model="room.opinion_2"
+            id="opinion_2"
+            :counter="100"
+            label="意見B"
+            :error-messages="errors"
+            outlined
+          ></v-text-field>
         </ValidationProvider>
 
         <v-btn color="primary" @click="createRoom" :disabled="invalid">作成</v-btn>
@@ -44,7 +68,6 @@
 <script>
 import { required, max } from 'vee-validate/dist/rules'
 import { extend, ValidationObserver, ValidationProvider, setInteractionMode } from 'vee-validate'
-import { CATEGORIES } from '@/const'
 
 setInteractionMode('eager')
 
@@ -59,7 +82,7 @@ extend('max', {
 })
 
 export default {
-  name: 'SignUp',
+  name: 'NewRoom',
   components: {
     ValidationObserver,
     ValidationProvider,
@@ -67,10 +90,11 @@ export default {
   data() {
     return {
       room: {
-        name: '',
-        category: ''
+        theme: '',
+        description: '',
+        opinion_1: '',
+        opinion_2: ''
       },
-      categories: CATEGORIES,
       errors: []
     }
   },
