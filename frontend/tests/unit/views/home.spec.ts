@@ -14,7 +14,7 @@ describe('Home.vue', () => {
     it('has buttons', () => {
       const wrapper = shallowMount(Home, { localVue })
       expect(wrapper.find('#search-rooms').exists()).toBeTruthy
-      expect(wrapper.find('#new-room').exists()).toBeFalsey
+      expect(wrapper.find('#new-room').exists()).toBeFalsy
     })
   })
 })
