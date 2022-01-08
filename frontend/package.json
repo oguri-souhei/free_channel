@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@mdi/font": "^5.9.55",
+    "@types/actioncable": "^5.2.7",
     "@types/jest": "^27.4.0",
     "@typescript-eslint/eslint-plugin": "^4.18.0",
     "@typescript-eslint/parser": "^4.18.0",
