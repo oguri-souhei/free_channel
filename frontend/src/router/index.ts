@@ -115,6 +115,9 @@ const router = new VueRouter({
 
 // ナビゲーションガード
 router.beforeEach((to, from, next) => {
+  // 遷移先のルートがundefinedの場合はreturn
+  if (!to || !to.meta) return
+
   document.title = to.meta.title
   // 認証が必要なページで、ログインしていない場合
   if (to.meta.requiresAuth && !store.getters.isLoggedIn) {
