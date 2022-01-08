@@ -32,7 +32,7 @@ describe('Comment.vue', () => {
       expect(wrapper.vm.$props.userName).toBe('foo')
       expect(wrapper.vm.avatar).toEqual({ url: 'http://bar.com' })
       expect(wrapper.vm.$props.userId).toBe(1)
-      expect(wrapper.vm.$props.isFavorited).toBeFalsey
+      expect(wrapper.vm.$props.isFavorited).toBeFalsy
       expect(wrapper.vm.$props.favoriteCount).toBe(100)
     })
   })
@@ -47,7 +47,7 @@ describe('Comment.vue', () => {
       it('sets false when isFavorited is false', () => {
         propsData.isFavorited = false
         const wrapper = shallowMount(Comment, { propsData, router, localVue })
-        expect(wrapper.vm.$data.flag).toBeFalsey
+        expect(wrapper.vm.$data.flag).toBeFalsy
       })
     })
 
@@ -80,7 +80,7 @@ describe('Comment.vue', () => {
       it('toggles flag', () => {
         propsData.isFavorited = false
         const wrapper = shallowMount(Comment, { propsData, router, localVue })
-        expect(wrapper.vm.$data.flag).toBeFalsey
+        expect(wrapper.vm.$data.flag).toBeFalsy
         wrapper.vm.favorite()
         expect(wrapper.vm.$data.flag).toBeTruthy
       })
@@ -99,7 +99,7 @@ describe('Comment.vue', () => {
         const wrapper = shallowMount(Comment, { propsData, router, localVue })
         expect(wrapper.vm.$data.flag).toBeTruthy
         wrapper.vm.unfavorite()
-        expect(wrapper.vm.$data.flag).toBeFalsey
+        expect(wrapper.vm.$data.flag).toBeFalsy
       })
     })
   })

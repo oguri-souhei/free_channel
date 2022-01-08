@@ -78,7 +78,7 @@ describe('ShowRoom.vue', () => {
         axios.get.mockResolvedValueOnce(resp_200)
         const wrapper = shallowMount(ShowRoom, { router, store, localVue })
         setTimeout(() => {
-          expect(wrapper.vm.isOwner).toBeFalsey()
+          expect(wrapper.vm.isOwner).toBeFalsy()
         }, 1)
       })
     })
